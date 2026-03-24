@@ -1,0 +1,100 @@
+{
+  "nodes": [
+    {
+      "id": "node_la_001",
+      "name": "线性方程组",
+      "prerequisites": [],
+      "description": {
+        "core_concept": "线性方程组的基本概念和求解方法",
+        "testable_angles": {
+          "memory": "线性方程组的定义和表示方法",
+          "understanding": "线性方程组的解的存在性和唯一性",
+          "application": "用消元法求解线性方程组",
+          "analysis": "线性方程组解的结构分析"
+        },
+        "confusable_points": "齐次线性方程组和非齐次线性方程组的区别"
+      },
+      "difficulty_coeff": 0.7
+    },
+    {
+      "id": "node_la_002",
+      "name": "矩阵及其运算",
+      "prerequisites": [],
+      "description": {
+        "core_concept": "矩阵的基本概念和运算规则",
+        "testable_angles": {
+          "memory": "矩阵的定义和基本类型",
+          "understanding": "矩阵的加法、乘法等运算规则",
+          "application": "用矩阵表示线性方程组",
+          "analysis": "矩阵运算的性质和应用"
+        },
+        "confusable_points": "矩阵乘法的交换律和结合律"
+      },
+      "difficulty_coeff": 0.65
+    },
+    {
+      "id": "node_la_003",
+      "name": "行列式",
+      "prerequisites": ["node_la_002"],
+      "description": {
+        "core_concept": "行列式的定义和计算方法",
+        "testable_angles": {
+          "memory": "行列式的定义和性质",
+          "understanding": "行列式的展开定理",
+          "application": "用行列式求解线性方程组",
+          "analysis": "行列式的几何意义"
+        },
+        "confusable_points": "不同阶行列式的计算方法"
+      },
+      "difficulty_coeff": 0.75
+    },
+    {
+      "id": "node_la_004",
+      "name": "向量空间",
+      "prerequisites": ["node_la_001", "node_la_002"],
+      "description": {
+        "core_concept": "向量空间的基本概念和性质",
+        "testable_angles": {
+          "memory": "向量空间的定义和基本性质",
+          "understanding": "向量的线性相关性和线性无关性",
+          "application": "基和维数的计算",
+          "analysis": "向量空间的同构"
+        },
+        "confusable_points": "线性相关和线性无关的判定"
+      },
+      "difficulty_coeff": 0.8
+    },
+    {
+      "id": "node_la_005",
+      "name": "线性变换",
+      "prerequisites": ["node_la_004"],
+      "description": {
+        "core_concept": "线性变换的定义和性质",
+        "testable_angles": {
+          "memory": "线性变换的定义和基本性质",
+          "understanding": "线性变换的矩阵表示",
+          "application": "线性变换的特征值和特征向量",
+          "analysis": "线性变换的对角化"
+        },
+        "confusable_points": "线性变换和矩阵的关系"
+      },
+      "difficulty_coeff": 0.85
+    },
+    {
+      "id": "node_la_006",
+      "name": "二次型",
+      "prerequisites": ["node_la_005"],
+      "description": {
+        "core_concept": "二次型的定义和标准形",
+        "testable_angles": {
+          "memory": "二次型的定义和矩阵表示",
+          "understanding": "二次型的标准形和规范形",
+          "application": "用正交变换化二次型为标准形",
+          "analysis": "二次型的正定性"
+        },
+        "confusable_points": "正定二次型的判定"
+      },
+      "difficulty_coeff": 0.9
+    }
+  ]
+}

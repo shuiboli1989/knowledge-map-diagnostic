@@ -47,15 +47,32 @@ def save_student(student_data: dict) -> None:
     students_dir.mkdir(parents=True, exist_ok=True)
     file_path = students_dir / f"{student_id}.json"
     
-    # 保存数据
+    # 检查是否已存在学生数据
+    existing_data = load_student(student_id)
+    if existing_data:
+        # 保留其他课程的状态
+        existing_data['courses'] = existing_data.get('courses', {})
+        course_id = student_data.get('course_id')
+        if course_id:
+            # 只更新当前课程的状态
+            existing_data['courses'][course_id] = {
+                'node_states': student_data.get('node_states', {}),
+                'answer_history': student_data.get('answer_history', [])
+            }
+            # 保存更新后的数据
+            save_json(file_path, existing_data)
+            return
+    
+    # 如果是新学生或没有课程ID，使用原有逻辑
     save_json(file_path, student_data)
 
 
-def load_student(student_id: str) -> dict | None:
+def load_student(student_id: str, course_id: str = None) -> dict | None:
     """从文件加载学生状态，不存在时返回 None
 
     Args:
         student_id: 学生ID
+        course_id: 课程ID，可选
 
     Returns:
         dict | None: 学生数据，不存在时返回 None
@@ -69,4 +86,20 @@ def load_student(student_id: str) -> dict | None:
         return None
     
     # 加载数据
-    return load_json(file_path)
+    data = load_json(file_path)
+    
+    # 如果指定了课程ID，返回该课程的状态
+    if course_id:
+        courses = data.get('courses', {})
+        course_data = courses.get(course_id)
+        if course_data:
+            # 构建完整的学生数据结构
+            return {
+                'student_id': student_id,
+                'course_id': course_id,
+                'node_states': course_data.get('node_states', {}),
+                'answer_history': course_data.get('answer_history', [])
+            }
+        return None
+    
+    return data

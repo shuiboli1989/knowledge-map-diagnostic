@@ -6,6 +6,7 @@
 """
 
 import streamlit as st
+import re
 from pathlib import Path
 from core.initializer import create_student_state, record_answer
 from core.bkt import update_student_state
@@ -47,12 +48,13 @@ body {
     margin-bottom: 20px;
 }
 
-/* 去除 Streamlit 默认 header 和 footer */
-header {
+/* 去除 Streamlit 默认 footer */
+footer {
     display: none !important;
 }
 
-footer {
+/* 隐藏 header 中的品牌信息，但保留侧边栏控制按钮 */
+header .css-18ni7ap {
     display: none !important;
 }
 
@@ -208,9 +210,48 @@ footer {
 </style>
 """, unsafe_allow_html=True)
 
+# 侧边栏
+# 顶部品牌区域
+st.sidebar.markdown("""
+<div style='padding: 20px 0; border-bottom: 1px solid #EEEEEE; margin-bottom: 20px;'>
+    <h1 style='font-size: 18px; font-weight: bold; color: #1A1A1A; margin: 0; padding-left: 12px; border-left: 4px solid #D42B2B;'>教育诊断系统</h1>
+</div>
+""", unsafe_allow_html=True)
+
+# 学生信息
+student_id = st.sidebar.text_input("学生ID", placeholder="请输入学生ID")
+
+# 课程选择
+courses = {
+    "course_finance_101": "金融学基础",
+    "course_linear_algebra": "线性代数"
+}
+
+# 初始化 session_state 中的课程ID
+if 'last_course_id' not in st.session_state:
+    st.session_state.last_course_id = None
+
+course_id = st.sidebar.selectbox("选择课程", options=list(courses.keys()), format_func=lambda x: courses[x])
+st.sidebar.markdown(f"<p style='color: #1A1A1A;'>课程: {courses[course_id]}</p>", unsafe_allow_html=True)
+
+# 当课程发生变化时，重置 session_state 中的题目相关变量
+if st.session_state.last_course_id != course_id:
+    st.session_state.current_question = None
+    st.session_state.answered = False
+    st.session_state.selected_option = None
+    st.session_state.p_mastery_before = 0
+    st.session_state.last_course_id = course_id
+    st.rerun()
+
 # 加载知识图谱和题库
-graph_path = Path(__file__).parent / "data" / "graph.json"
-questions_path = Path(__file__).parent / "data" / "questions.json"
+graph_path = Path(__file__).parent / "data" / f"graph_{course_id}.json"
+questions_path = Path(__file__).parent / "data" / f"questions_{course_id}.json"
+
+# 如果课程文件不存在，使用默认的金融学基础数据
+if not graph_path.exists():
+    graph_path = Path(__file__).parent / "data" / "graph.json"
+if not questions_path.exists():
+    questions_path = Path(__file__).parent / "data" / "questions.json"
 
 try:
     graph_data = load_json(graph_path)
@@ -227,23 +268,10 @@ except Exception as e:
     graph_data = {"nodes": []}
     questions = []
 
-# 侧边栏
-# 顶部品牌区域
-st.sidebar.markdown("""
-<div style='padding: 20px 0; border-bottom: 1px solid #EEEEEE; margin-bottom: 20px;'>
-    <h1 style='font-size: 18px; font-weight: bold; color: #1A1A1A; margin: 0; padding-left: 12px; border-left: 4px solid #D42B2B;'>教育诊断系统</h1>
-</div>
-""", unsafe_allow_html=True)
-
-# 学生信息
-student_id = st.sidebar.text_input("学生ID", placeholder="请输入学生ID")
-course_id = "course_finance_101"  # 固定为"金融学基础"
-st.sidebar.markdown("<p style='color: #1A1A1A;'>课程: 金融学基础</p>", unsafe_allow_html=True)
-
 # 初始化学生状态
 if student_id:
-    # 尝试加载学生状态
-    student_data = load_student(student_id)
+    # 尝试加载学生状态（指定课程ID）
+    student_data = load_student(student_id, course_id)
     
     # 如果学生状态不存在或 node_states 为空，创建新状态
     if not student_data or not student_data.get('node_states', {}):
@@ -298,7 +326,12 @@ with tab1:
             st.session_state.p_mastery_before = 0
         
         # 加载学生状态
-        student_data = load_student(student_id)
+        student_data = load_student(student_id, course_id)
+        
+        # 确保学生状态存在
+        if not student_data:
+            student_data = create_student_state(student_id, course_id, graph_data)
+            save_student(student_data)
         
         # 选择下一题
         def get_next_question():
@@ -358,6 +391,22 @@ with tab1:
             # 题型标注（假设为单选题）
             question_type = "单选题"
             
+            # 处理行列式的显示，使用 LaTeX 渲染
+            question_text = question.get('question')
+            
+            # 检查是否包含行列式
+            if '|' in question_text:
+                # 简单处理：将 |a b; c d| 格式转换为 LaTeX 格式
+                # 匹配二阶行列式
+                question_text = re.sub(r'\|(.*?);\s*(.*?)\|', r'$\\begin{vmatrix}\1 \\cr \\2\\end{vmatrix}$', question_text)
+                # 匹配三阶行列式
+                question_text = re.sub(r'\|(.*?);\s*(.*?);\s*(.*?)\|', r'$\\begin{vmatrix}\1 \\cr \\2 \\cr \\3\\end{vmatrix}$', question_text)
+            
+            # 处理矩阵的显示，使用 LaTeX 渲染
+            if '[' in question_text and ']' in question_text:
+                # 简单处理：将 [[a, b], [c, d]] 格式转换为 LaTeX 格式
+                question_text = re.sub(r'\[\[(.*?),\s*(.*?)\],\s*\[(.*?),\s*(.*?)\]\]', r'$\\begin{bmatrix} \1 & \2 \\ \3 & \4 \\ \end{bmatrix}$', question_text)
+            
             # 显示题目卡片
             st.markdown(f"""
             <div class="question-card">
@@ -366,7 +415,8 @@ with tab1:
                     <span style="background-color: #F0F9FF; color: {level_color}; border-radius: 12px; padding: 4px 12px; font-size: 11px; display: inline-block; margin-right: 8px; margin-bottom: 8px;">{chinese_level}</span>
                     <span style="background-color: #F0FDF4; color: #10B981; border-radius: 12px; padding: 4px 12px; font-size: 11px; display: inline-block; margin-right: 8px; margin-bottom: 8px;">{question_type}</span>
                 </div>
-                <h3 style="font-size: 16px; font-weight: bold; color: #1A1A1A; line-height: 1.6; margin-bottom: 20px;">题目: {question.get('question')}</h3>
+                <h3 style="font-size: 16px; font-weight: bold; color: #1A1A1A; line-height: 1.6; margin-bottom: 20px;">题目: {question_text}</h3>
+            </div>
             """, unsafe_allow_html=True)
             
             # 显示选项
@@ -451,7 +501,12 @@ with tab2:
         st.warning("请在侧边栏输入学生ID")
     else:
         # 加载学生状态
-        student_data = load_student(student_id)
+        student_data = load_student(student_id, course_id)
+        
+        # 确保学生状态存在
+        if not student_data:
+            student_data = create_student_state(student_id, course_id, graph_data)
+            save_student(student_data)
         
         # 生成知识图谱可视化
         st.markdown("### 知识点关联与掌握情况")
@@ -524,10 +579,11 @@ with tab2:
         }
         """)
         
-        # 添加节点
+        # 先添加所有节点，无论是否在 student_data 中
         for node in graph_data.get('nodes', []):
             node_id = node.get('id')
             node_name = node.get('name', node_id)
+            # 检查节点是否在学生状态中
             if node_id in student_data['node_states']:
                 p_mastery = student_data['node_states'][node_id].get('p_mastery', 0)
                 # 根据掌握程度设置颜色
@@ -548,16 +604,24 @@ with tab2:
                     border_color = "#DDDDDD"
                 # 节点标签显示节点名称和掌握概率百分比
                 label = f"{node_name}\n{p_mastery * 100:.0f}%"
-                # 添加节点，设置大小为 30
-                net.add_node(node_id, label=label, size=30, color=color, font={"color": font_color, "size": 14, "face": "Arial", "strokeWidth": 1, "strokeColor": "#000000"}, borderWidth=2, borderColor=border_color)
-        
+            else:
+                # 节点不在学生状态中，使用默认颜色
+                color = "#F5F5F5"
+                font_color = "#666666"
+                border_color = "#DDDDDD"
+                label = f"{node_name}\n0%"
+            # 添加节点，设置大小为 30
+            net.add_node(node_id, label=label, size=30, color=color, font={"color": font_color, "size": 14, "face": "Arial", "strokeWidth": 1, "strokeColor": "#000000"}, borderWidth=2, borderColor=border_color)
+
         # 添加边（先修关系）
         for node in graph_data.get('nodes', []):
             node_id = node.get('id')
             prerequisites = node.get('prerequisites', [])
             for prereq_id in prerequisites:
-                # 添加有向边，方向为先修节点 → 后继节点
-                net.add_edge(prereq_id, node_id, color="#DDDDDD")
+                # 检查源节点是否存在
+                if prereq_id in [node['id'] for node in graph_data.get('nodes', [])]:
+                    # 添加有向边，方向为先修节点 → 后继节点
+                    net.add_edge(prereq_id, node_id, color="#DDDDDD")
         
         # 生成 HTML 文件
         with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as f:

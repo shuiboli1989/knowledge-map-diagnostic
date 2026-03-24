@@ -1,0 +1,110 @@
+[
+  {
+    "id": "q_la_001",
+    "node_id": "node_la_001",
+    "level": "memory",
+    "question": "下列关于线性方程组的说法中，正确的是：",
+    "options": ["A. 线性方程组一定有解", "B. 线性方程组的解一定唯一", "C. 齐次线性方程组至少有一个零解", "D. 非齐次线性方程组一定有解"],
+    "answer": "C",
+    "explanation": "齐次线性方程组的常数项全为零，因此当未知数全为零时一定满足方程，即至少有一个零解。"
+  },
+  {
+    "id": "q_la_002",
+    "node_id": "node_la_001",
+    "level": "understanding",
+    "question": "对于线性方程组 Ax = b，当系数矩阵 A 的秩等于增广矩阵 (A|b) 的秩时，方程组：",
+    "options": ["A. 无解", "B. 有唯一解", "C. 有无穷多解", "D. 有解"],
+    "answer": "D",
+    "explanation": "根据线性方程组解的存在性定理，当系数矩阵的秩等于增广矩阵的秩时，方程组有解。"
+  },
+  {
+    "id": "q_la_003",
+    "node_id": "node_la_002",
+    "level": "memory",
+    "question": "下列关于矩阵乘法的说法中，正确的是：",
+    "options": ["A. 矩阵乘法满足交换律", "B. 矩阵乘法满足结合律", "C. 任意两个矩阵都可以相乘", "D. 矩阵乘法的结果一定是方阵"],
+    "answer": "B",
+    "explanation": "矩阵乘法满足结合律，即 (AB)C = A(BC)，但不满足交换律。"
+  },
+  {
+    "id": "q_la_004",
+    "node_id": "node_la_002",
+    "level": "application",
+    "question": "设矩阵 $\\\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\\\ \\\\end{bmatrix}$，$B = \\\\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\\\ \\\\end{bmatrix}$，则 AB = ：",
+    "options": ["A. $\\\\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\\\ \\\\end{bmatrix}$", "B. $\\\\begin{bmatrix} 5 & 12 \\\\ 21 & 32 \\\\ \\\\end{bmatrix}$", "C. $\\\\begin{bmatrix} 19 & 43 \\\\ 22 & 50 \\\\ \\\\end{bmatrix}$", "D. $\\\\begin{bmatrix} 5 & 21 \\\\ 12 & 32 \\\\ \\\\end{bmatrix}$"],
+    "answer": "A",
+    "explanation": "矩阵乘法的计算方法是：第一个矩阵的行与第二个矩阵的列对应元素相乘再求和。"
+  },
+  {
+    "id": "q_la_005",
+    "node_id": "node_la_003",
+    "level": "memory",
+    "question": "二阶行列式 $\\\\begin{vmatrix} a & b \\\\ c & d \\\\ \\\\end{vmatrix}$ 的值为：",
+    "options": ["A. ad - bc", "B. ad + bc", "C. ac - bd", "D. ac + bd"],
+    "answer": "A",
+    "explanation": "二阶行列式的计算公式为：主对角线元素之积减去副对角线元素之积。"
+  },
+  {
+    "id": "q_la_006",
+    "node_id": "node_la_003",
+    "level": "application",
+    "question": "行列式 $\\\\begin{vmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\\\ 7 & 8 & 9 \\\\ \\\\end{vmatrix}$ 的值为：",
+    "options": ["A. 0", "B. 1", "C. -1", "D. 9"],
+    "answer": "A",
+    "explanation": "该行列式的第三行等于第一行加上第二行，因此行列式的值为零。"
+  },
+  {
+    "id": "q_la_007",
+    "node_id": "node_la_004",
+    "level": "understanding",
+    "question": "下列向量组中，线性无关的是：",
+    "options": ["A. (1, 2), (2, 4)", "B. (1, 0), (0, 1), (1, 1)", "C. (1, 2, 3), (4, 5, 6), (7, 8, 9)", "D. (1, 0, 0), (0, 1, 0), (0, 0, 1)"],
+    "answer": "D",
+    "explanation": "选项 D 是三维单位向量组，线性无关。其他选项中，A 中两个向量成比例，B 中三个二维向量必线性相关，C 中三个向量线性相关。"
+  },
+  {
+    "id": "q_la_008",
+    "node_id": "node_la_004",
+    "level": "analysis",
+    "question": "向量空间 R^3 的维数是：",
+    "options": ["A. 1", "B. 2", "C. 3", "D. 4"],
+    "answer": "C",
+    "explanation": "R^3 是三维向量空间，其维数为 3。"
+  },
+  {
+    "id": "q_la_009",
+    "node_id": "node_la_005",
+    "level": "memory",
+    "question": "线性变换 T: V → V 的特征值 λ 满足：",
+    "options": ["A. T(v) = λv 对所有 v ∈ V", "B. 存在非零向量 v ∈ V 使得 T(v) = λv", "C. T(v) = λv 对某个 v ∈ V", "D. λ 是矩阵的行列式"],
+    "answer": "B",
+    "explanation": "线性变换的特征值是存在非零向量 v 使得 T(v) = λv 的数 λ。"
+  },
+  {
+    "id": "q_la_010",
+    "node_id": "node_la_005",
+    "level": "application",
+    "question": "矩阵 $\\\\begin{bmatrix} 2 & 1 \\\\ 1 & 2 \\\\ \\\\end{bmatrix}$ 的特征值为：",
+    "options": ["A. 1 和 3", "B. 2 和 2", "C. -1 和 3", "D. 0 和 4"],
+    "answer": "A",
+    "explanation": "计算特征方程 |A - λI| = 0，得到 (2-λ)^2 - 1 = 0，解得 λ = 1 或 λ = 3。"
+  },
+  {
+    "id": "q_la_011",
+    "node_id": "node_la_006",
+    "level": "memory",
+    "question": "二次型 f(x1, x2) = x1^2 + 2x1x2 + x2^2 的矩阵表示为：",
+    "options": ["A. $\\\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\\\ \\\\end{bmatrix}$", "B. $\\\\begin{bmatrix} 1 & 2 \\\\ 2 & 1 \\\\ \\\\end{bmatrix}$", "C. $\\\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\\\ \\\\end{bmatrix}$", "D. $\\\\begin{bmatrix} 2 & 1 \\\\ 1 & 2 \\\\ \\\\end{bmatrix}$"],
+    "answer": "A",
+    "explanation": "二次型的矩阵表示中，主对角线元素是平方项的系数，非主对角线元素是交叉项系数的一半。"
+  },
+  {
+    "id": "q_la_012",
+    "node_id": "node_la_006",
+    "level": "analysis",
+    "question": "二次型 f(x1, x2) = x1^2 + 2x1x2 + 3x2^2 是否正定？",
+    "options": ["A. 是", "B. 否", "C. 不确定", "D. 以上都不对"],
+    "answer": "A",
+    "explanation": "二次型的矩阵为 $\\\\begin{bmatrix} 1 & 1 \\\\ 1 & 3 \\\\ \\\\end{bmatrix}$，其各阶顺序主子式都大于零，因此是正定的。"
+  }
+]

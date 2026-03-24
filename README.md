@@ -17,32 +17,38 @@
 ```
 project/
 ├── data/
-│   ├── graph.json          # 知识图谱
-│   ├── questions.json      # 题库
-│   └── students/           # 学生状态文件
+│   ├── graph.json                      # 金融学基础知识图谱
+│   ├── questions.json                  # 金融学基础题库
+│   ├── graph_course_linear_algebra.json # 线性代数知识图谱
+│   ├── questions_course_linear_algebra.json # 线性代数题库
+│   └── students/                       # 学生状态文件
 ├── core/
-│   ├── bkt.py              # BKT 更新逻辑
-│   ├── cat.py              # CAT 选题逻辑
-│   ├── initializer.py      # 初始概率计算
-│   └── llm_client.py       # LLM API 调用封装
+│   ├── bkt.py                          # BKT 更新逻辑
+│   ├── cat.py                          # CAT 选题逻辑
+│   ├── initializer.py                  # 初始概率计算
+│   └── llm_client.py                   # LLM API 调用封装
 ├── utils/
-│   └── io.py               # JSON 读写工具
+│   └── io.py                           # JSON 读写工具
 ├── tests/
 │   ├── test_bkt.py
 │   ├── test_cat.py
 │   └── test_initializer.py
-├── app.py                  # Streamlit 主入口
-├── requirements.txt        # 依赖文件
-└── .gitignore             # Git 忽略文件
+├── app.py                              # Streamlit 主入口
+├── requirements.txt                    # 依赖文件
+├── .gitignore                         # Git 忽略文件
+└── validate_json.py                    # JSON 验证工具
 ```
 
 ## 核心功能
 
-1. **知识图谱可视化**：使用 pyvis 实现交互式知识图谱，展示知识点之间的先修关系和学生的掌握情况
-2. **自适应诊断**：基于学生当前知识状态，自动选择信息增益最大的题目
-3. **贝叶斯知识追踪**：根据学生答题情况动态更新知识点掌握概率
-4. **冷启动初始化**：基于知识图谱的先修关系和知识点难度，计算初始掌握概率
-5. **实时反馈**：答题后立即显示答案解析和掌握概率变化
+1. **多课程支持**：支持金融学基础和线性代数两门课程，可在侧边栏自由切换
+2. **独立的课程状态**：每个学生可以拥有多个课程的状态，切换课程时不会覆盖之前的状态
+3. **知识图谱可视化**：使用 pyvis 实现交互式知识图谱，展示知识点之间的先修关系和学生的掌握情况
+4. **自适应诊断**：基于学生当前知识状态，自动选择信息增益最大的题目
+5. **贝叶斯知识追踪**：根据学生答题情况动态更新知识点掌握概率
+6. **冷启动初始化**：基于知识图谱的先修关系和知识点难度，计算初始掌握概率
+7. **实时反馈**：答题后立即显示答案解析和掌握概率变化
+8. **LaTeX 数学公式渲染**：支持矩阵、行列式等数学公式的正确显示
 
 ## 如何运行
 
@@ -57,7 +63,7 @@ project/
    ```
 
 3. 访问应用
-   在浏览器中打开 http://localhost:8501
+   在浏览器中打开 http://localhost:8504（端口可能会有所不同）
 
 ## 测试
 
@@ -67,9 +73,15 @@ project/
 python -m pytest tests/ -v
 ```
 
+验证 JSON 文件格式：
+
+```bash
+python validate_json.py
+```
+
 ## 数据结构
 
-### 知识图谱节点（graph.json）
+### 知识图谱节点（graph_{course_id}.json）
 
 ```json
 {
@@ -90,7 +102,7 @@ python -m pytest tests/ -v
 }
 ```
 
-### 试题（questions.json）
+### 试题（questions_{course_id}.json）
 
 ```json
 {
@@ -109,17 +121,32 @@ python -m pytest tests/ -v
 ```json
 {
   "student_id": "stu_001",
-  "course_id": "course_finance_101",
-  "node_states": {
-    "node_001": {
-      "p_mastery": 0.62,
-      "base_prob": 0.50,
-      "difficulty_coeff": 0.80,
-      "answered_count": 0,
-      "last_updated": "2025-01-01T00:00:00"
+  "courses": {
+    "course_finance_101": {
+      "node_states": {
+        "node_001": {
+          "p_mastery": 0.62,
+          "base_prob": 0.50,
+          "difficulty_coeff": 0.80,
+          "answered_count": 0,
+          "last_updated": "2025-01-01T00:00:00"
+        }
+      },
+      "answer_history": []
+    },
+    "course_linear_algebra": {
+      "node_states": {
+        "node_la_001": {
+          "p_mastery": 0.5,
+          "base_prob": 0.5,
+          "difficulty_coeff": 0.7,
+          "answered_count": 0,
+          "last_updated": "2025-01-01T00:00:00"
+        }
+      },
+      "answer_history": []
     }
-  },
-  "answer_history": []
+  }
 }
 ```
 
@@ -165,11 +192,11 @@ P(答对) = P(答对|已掌握) × P_old + P(答对|未掌握) × (1 - P_old)
 
 ### 侧边栏
 - 学生ID输入：用于标识学生身份
-- 课程显示：当前课程为"金融学基础"
+- 课程选择：可在"金融学基础"和"线性代数"之间切换
 - 知识点掌握情况：显示每个知识点的掌握概率和进度条
 
 ### 主区域
-- **自适应诊断**：显示当前题目，学生可以选择答案并提交
+- **自适应诊断**：显示当前题目，学生可以选择答案并提交，支持 LaTeX 数学公式渲染
 - **知识图谱**：可视化展示知识点之间的关系和学生的掌握情况
 
 ## 注意事项
@@ -177,16 +204,24 @@ P(答对) = P(答对|已掌握) × P_old + P(答对|未掌握) × (1 - P_old)
 1. 项目使用 JSON 文件存储数据，不使用数据库
 2. 学生状态文件存储在 `data/students/` 目录下，以学生ID命名
 3. 知识图谱和题库需要手动编辑，确保数据格式正确
-4. 系统默认使用"金融学基础"课程的数据
+4. 数学公式使用 LaTeX 语法，需要正确转义反斜杠
 5. 目前只支持单选题型
+
+## 已实现的功能
+
+1. ✅ 多课程支持（金融学基础和线性代数）
+2. ✅ 独立的课程状态管理
+3. ✅ LaTeX 数学公式渲染
+4. ✅ 侧边栏显示/隐藏控制
+5. ✅ 课程切换时内容自动更新
 
 ## 未来计划
 
 1. 支持更多题型（多选题、简答题等）
 2. 集成 LLM 生成题目和解析
 3. 添加学习路径推荐功能
-4. 支持多课程管理
-5. 优化知识图谱可视化效果
+4. 优化知识图谱可视化效果
+5. 支持更多课程的扩展
 
 ## 许可证
 
