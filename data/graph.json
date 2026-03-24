@@ -1,0 +1,102 @@
+{
+  "course_id": "course_finance_101",
+  "course_name": "金融学基础",
+  "nodes": [
+    {
+      "id": "node_001",
+      "name": "货币的定义与职能",
+      "prerequisites": [],
+      "description": {
+        "core_concept": "货币是充当一般等价物的特殊商品，具有价值尺度、流通手段、贮藏手段、支付手段和世界货币五种职能。",
+        "testable_angles": {
+          "memory": "货币五种职能的名称与定义",
+          "understanding": "区分各职能的本质区别，如价值尺度与支付手段的区别",
+          "application": "给定经济场景，判断货币发挥了哪种职能",
+          "analysis": "分析货币职能在现代电子支付环境下的演变"
+        },
+        "confusable_points": "流通手段（现场交换）与支付手段（延期支付）容易混淆；贮藏手段必须是足值货币"
+      },
+      "difficulty_coeff": 0.80
+    },
+    {
+      "id": "node_002",
+      "name": "货币供求理论",
+      "prerequisites": ["node_001"],
+      "description": {
+        "core_concept": "货币供给由中央银行控制，货币需求取决于交易需求和投机需求。均衡利率由货币供求决定。",
+        "testable_angles": {
+          "memory": "影响货币需求的主要因素（收入、利率、价格水平）",
+          "understanding": "货币供给增加如何通过利率影响实体经济",
+          "application": "根据货币供求变化，推断利率和产出的变动方向",
+          "analysis": "流动性陷阱下货币政策为何失效"
+        },
+        "confusable_points": "货币供给是存量概念而非流量；交易需求与利率负相关，投机需求与利率负相关"
+      },
+      "difficulty_coeff": 0.60
+    },
+    {
+      "id": "node_003",
+      "name": "银行体系与信用创造",
+      "prerequisites": ["node_001"],
+      "description": {
+        "core_concept": "商业银行通过存款准备金制度创造存款货币，信用乘数 = 1/法定准备金率。",
+        "testable_angles": {
+          "memory": "法定准备金率、超额准备金率的定义",
+          "understanding": "存款创造的乘数机制",
+          "application": "已知准备金率，计算存款扩张倍数",
+          "analysis": "央行调整准备金率对货币供给的传导链条"
+        },
+        "confusable_points": "货币乘数与信用乘数概念不同；实际乘数小于理论乘数（因为现金漏损）"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_004",
+      "name": "货币乘数",
+      "prerequisites": ["node_002", "node_003"],
+      "description": {
+        "core_concept": "货币乘数 = 货币供给量 / 基础货币，反映基础货币扩张为广义货币的倍数，受准备金率和现金比率影响。",
+        "testable_angles": {
+          "memory": "货币乘数公式及各变量含义",
+          "understanding": "准备金率上升为何导致货币乘数下降",
+          "application": "已知基础货币和乘数，计算货币供给量",
+          "analysis": "金融危机期间货币乘数大幅下降的原因"
+        },
+        "confusable_points": "基础货币（高能货币）≠ 货币供给；乘数变化与准备金率反向变动"
+      },
+      "difficulty_coeff": 0.45
+    },
+    {
+      "id": "node_005",
+      "name": "利率理论",
+      "prerequisites": ["node_002"],
+      "description": {
+        "core_concept": "利率是资金的价格，由可贷资金供求决定。名义利率 = 实际利率 + 通货膨胀率（费雪效应）。",
+        "testable_angles": {
+          "memory": "名义利率与实际利率的关系公式",
+          "understanding": "通货膨胀预期如何影响名义利率",
+          "application": "已知名义利率和通胀率，计算实际利率",
+          "analysis": "零利率下限对央行货币政策空间的制约"
+        },
+        "confusable_points": "费雪方程式的精确版与近似版区别；实际利率可以为负"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_006",
+      "name": "货币政策传导机制",
+      "prerequisites": ["node_004", "node_005"],
+      "description": {
+        "core_concept": "货币政策通过利率渠道、信贷渠道、资产价格渠道和汇率渠道影响实体经济，存在时滞。",
+        "testable_angles": {
+          "memory": "四种传导渠道的名称与简要机制",
+          "understanding": "利率渠道的完整传导链：央行操作→短期利率→长期利率→投资→产出",
+          "application": "分析特定货币政策工具通过哪些渠道发挥作用",
+          "analysis": "为什么货币政策在经济下行时传导效果弱于上行时"
+        },
+        "confusable_points": "传导时滞分为内部时滞（决策）和外部时滞（生效）；信贷渠道强调信息不对称"
+      },
+      "difficulty_coeff": 0.30
+    }
+  ]
+}

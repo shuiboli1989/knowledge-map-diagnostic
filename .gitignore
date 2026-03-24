@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+
+# pytest
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/
+
+# Data
+/data/students/
+
+# Lib
+/lib/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS
+.DS_Store
+Thumbs.db
