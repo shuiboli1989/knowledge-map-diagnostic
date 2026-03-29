@@ -63,8 +63,21 @@ def save_student(student_data: dict) -> None:
             save_json(file_path, existing_data)
             return
     
-    # 如果是新学生或没有课程ID，使用原有逻辑
-    save_json(file_path, student_data)
+    # 如果是新学生或没有课程ID，构建正确的多课程结构
+    course_id = student_data.get('course_id')
+    if course_id:
+        new_data = {
+            'student_id': student_data.get('student_id'),
+            'courses': {
+                course_id: {
+                    'node_states': student_data.get('node_states', {}),
+                    'answer_history': student_data.get('answer_history', [])
+                }
+            }
+        }
+        save_json(file_path, new_data)
+    else:
+        save_json(file_path, student_data)
 
 
 def load_student(student_id: str, course_id: str = None) -> dict | None:

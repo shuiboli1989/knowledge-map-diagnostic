@@ -224,7 +224,8 @@ student_id = st.sidebar.text_input("学生ID", placeholder="请输入学生ID")
 # 课程选择
 courses = {
     "course_finance_101": "金融学基础",
-    "course_linear_algebra": "线性代数"
+    "course_linear_algebra": "线性代数",
+    "course_china_finance": "中国金融学"
 }
 
 # 初始化 session_state 中的课程ID
