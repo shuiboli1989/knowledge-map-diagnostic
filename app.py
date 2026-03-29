@@ -6,7 +6,6 @@
 """
 
 import streamlit as st
-import re
 from pathlib import Path
 from core.initializer import create_student_state, record_answer
 from core.bkt import update_student_state
@@ -391,24 +390,10 @@ with tab1:
             
             # 题型标注（假设为单选题）
             question_type = "单选题"
-            
-            # 处理行列式的显示，使用 LaTeX 渲染
+
             question_text = question.get('question')
-            
-            # 检查是否包含行列式
-            if '|' in question_text:
-                # 简单处理：将 |a b; c d| 格式转换为 LaTeX 格式
-                # 匹配二阶行列式
-                question_text = re.sub(r'\|(.*?);\s*(.*?)\|', r'$\\begin{vmatrix}\1 \\cr \\2\\end{vmatrix}$', question_text)
-                # 匹配三阶行列式
-                question_text = re.sub(r'\|(.*?);\s*(.*?);\s*(.*?)\|', r'$\\begin{vmatrix}\1 \\cr \\2 \\cr \\3\\end{vmatrix}$', question_text)
-            
-            # 处理矩阵的显示，使用 LaTeX 渲染
-            if '[' in question_text and ']' in question_text:
-                # 简单处理：将 [[a, b], [c, d]] 格式转换为 LaTeX 格式
-                question_text = re.sub(r'\[\[(.*?),\s*(.*?)\],\s*\[(.*?),\s*(.*?)\]\]', r'$\\begin{bmatrix} \1 & \2 \\ \3 & \4 \\ \end{bmatrix}$', question_text)
-            
-            # 显示题目卡片
+
+            # 显示题目卡片：标签部分用 HTML，题目文本用 st.markdown 以支持 LaTeX
             st.markdown(f"""
             <div class="question-card">
                 <div style="margin-bottom: 12px;">
@@ -416,24 +401,26 @@ with tab1:
                     <span style="background-color: #F0F9FF; color: {level_color}; border-radius: 12px; padding: 4px 12px; font-size: 11px; display: inline-block; margin-right: 8px; margin-bottom: 8px;">{chinese_level}</span>
                     <span style="background-color: #F0FDF4; color: #10B981; border-radius: 12px; padding: 4px 12px; font-size: 11px; display: inline-block; margin-right: 8px; margin-bottom: 8px;">{question_type}</span>
                 </div>
-                <h3 style="font-size: 16px; font-weight: bold; color: #1A1A1A; line-height: 1.6; margin-bottom: 20px;">题目: {question_text}</h3>
             </div>
             """, unsafe_allow_html=True)
+            st.markdown(f"**题目：** {question_text}")
             
             # 显示选项
             options = question.get('options', [])
             question_id = question.get('id', '')
-            
-            # 自定义选项样式
-            for i, option in enumerate(options):
-                is_selected = st.session_state.selected_option == option
-                option_html = f"""
-                <div class="custom-option {'selected' if is_selected else ''}">
-                    {option}
-                </div>
-                """
-                if st.checkbox(option, value=is_selected, key=f"option_{question_id}_{i}"):
-                    st.session_state.selected_option = option
+
+            # 使用 radio 组件显示选项，支持 LaTeX 渲染
+            selected = st.radio(
+                "选择答案",
+                options,
+                index=None if not st.session_state.selected_option else (
+                    options.index(st.session_state.selected_option) if st.session_state.selected_option in options else None
+                ),
+                key=f"radio_{question_id}",
+                label_visibility="collapsed"
+            )
+            if selected:
+                st.session_state.selected_option = selected
             
             # 提交按钮
             if not st.session_state.answered:
@@ -474,8 +461,12 @@ with tab1:
                         <h3 style="margin-top: 0; font-size: 14px; font-weight: bold; color: {feedback_title_color};">{feedback_title}</h3>
                         <p style="font-size: 12px; color: #1A1A1A;"><strong>正确答案:</strong> {correct_answer}</p>
                         <p style="font-size: 12px; color: #1A1A1A;"><strong>你的答案:</strong> {st.session_state.selected_option[0]}</p>
-                        <p style="font-size: 12px; color: #1A1A1A;"><strong>解析:</strong> {question.get('explanation', '无解析')}</p>
-                        <h4 style="font-size: 12px; color: #666666; margin-top: 16px;">掌握概率变化</h4>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    st.markdown(f"**解析：** {question.get('explanation', '无解析')}")
+                    st.markdown(f"""
+                    <div style="margin-top: 8px;">
+                        <h4 style="font-size: 12px; color: #666666;">掌握概率变化</h4>
                         <div class="probability-change">
                             <span class="probability-old">{st.session_state.p_mastery_before * 100:.0f}%</span>
                             <span class="probability-arrow">→</span>
