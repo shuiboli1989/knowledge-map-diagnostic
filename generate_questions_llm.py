@@ -1,9 +1,17 @@
-"""调用 OpenTrek-72B 为中国金融学知识图谱生成试题"""
+"""调用 OpenTrek-72B 为指定课程知识图谱生成试题
+
+用法：
+  python generate_questions_llm.py                          # 默认：中国金融学
+  python generate_questions_llm.py course_china_finance      # 中国金融学
+  python generate_questions_llm.py course_philosophy         # 哲学通论
+  python generate_questions_llm.py course_linear_algebra     # 线性代数
+"""
 import requests
 import json
 import sys
 import io
 import time
+import argparse
 from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -12,8 +20,34 @@ API_URL = "https://ai-chat.hep.com.cn/llm/chat/completions"
 SYSTEM_TOKEN = "$1$jn7hHZvm$YFRCbYMuJMuNyJ939ylo.1"
 MODEL_CODE = 12003
 
+# 课程配置：course_id -> (显示名称, 学科领域, system prompt 角色描述, 题目ID前缀)
+COURSE_CONFIG = {
+    "course_china_finance": ("中国金融学", "金融学", "你是一位金融学教育专家，擅长根据知识点出题。请严格按照要求的JSON格式输出，不要输出任何多余内容。", "q_fin_llm"),
+    "course_philosophy": ("哲学通论", "哲学", "你是一位哲学教育专家，擅长根据哲学知识点出题。请严格按照要求的JSON格式输出，不要输出任何多余内容。", "q_phil_llm"),
+    "course_linear_algebra": ("线性代数", "数学", "你是一位数学教育专家，擅长根据线性代数知识点出题。请严格按照要求的JSON格式输出，不要输出任何多余内容。", "q_la_llm"),
+    "course_finance_101": ("金融学基础", "金融学", "你是一位金融学教育专家，擅长根据知识点出题。请严格按照要求的JSON格式输出，不要输出任何多余内容。", "q_fin101_llm"),
+}
+
+# 解析命令行参数
+parser = argparse.ArgumentParser(description="为指定课程生成LLM试题")
+parser.add_argument("course_id", nargs="?", default="course_china_finance",
+                    help=f"课程ID，可选值：{', '.join(COURSE_CONFIG.keys())}")
+args = parser.parse_args()
+
+course_id = args.course_id
+if course_id not in COURSE_CONFIG:
+    print(f"错误：未知课程 '{course_id}'，可选值：{', '.join(COURSE_CONFIG.keys())}")
+    sys.exit(1)
+
+course_name, subject, system_prompt, q_prefix = COURSE_CONFIG[course_id]
+print(f"课程：{course_name}（{course_id}）")
+
 # 读取知识图谱
-graph_path = Path(__file__).parent / "data" / "graph_course_china_finance.json"
+graph_path = Path(__file__).parent / "data" / f"graph_{course_id}.json"
+if not graph_path.exists():
+    print(f"错误：知识图谱文件不存在：{graph_path}")
+    sys.exit(1)
+
 with open(graph_path, 'r', encoding='utf-8') as f:
     graph = json.load(f)
 
@@ -28,7 +62,7 @@ def call_llm(prompt, max_retries=3):
     }
     payload = {
         "messages": [
-            {"role": "system", "content": "你是一位金融学教育专家，擅长根据知识点出题。请严格按照要求的JSON格式输出，不要输出任何多余内容。"},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
         ],
         "modelCode": MODEL_CODE,
@@ -153,7 +187,7 @@ for i, node in enumerate(nodes):
         questions = parse_questions(raw_response)
         if questions and isinstance(questions, list):
             for q in questions:
-                q['id'] = f"q_fin_llm_{question_counter:03d}"
+                q['id'] = f"{q_prefix}_{question_counter:03d}"
                 q['node_id'] = node_id
                 all_questions.append(q)
                 question_counter += 1
@@ -167,7 +201,7 @@ for i, node in enumerate(nodes):
     time.sleep(1)
 
 # 保存结果
-output_path = Path(__file__).parent / "data" / "questions_course_china_finance_llm.json"
+output_path = Path(__file__).parent / "data" / f"questions_{course_id}.json"
 with open(output_path, 'w', encoding='utf-8') as f:
     json.dump(all_questions, f, ensure_ascii=False, indent=2)
 

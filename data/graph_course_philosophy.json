@@ -1,0 +1,760 @@
+{
+  "nodes": [
+    {
+      "id": "node_phil_001",
+      "name": "\"爱智\"的哲学",
+      "prerequisites": [],
+      "description": {
+        "core_concept": "哲学源于古希腊语philosophia，意为'爱智慧'。哲学不是占有智慧，而是追求智慧的活动。哲学的本质在于对根本性问题的持续追问，是人类理性反思的最高形式。",
+        "testable_angles": {
+          "memory": "philosophia的词源含义，'爱智慧'的基本内涵",
+          "understanding": "为什么哲学是'爱智'而非'有智'，追求与占有的区别",
+          "application": "用'爱智'精神分析日常生活中的哲学思考",
+          "analysis": "爱智精神如何贯穿哲学发展的历史"
+        },
+        "confusable_points": "'爱智慧'与'拥有智慧'的区别；哲学与一般知识的区别"
+      },
+      "difficulty_coeff": 0.4
+    },
+    {
+      "id": "node_phil_002",
+      "name": "对\"自明性\"的分析",
+      "prerequisites": [
+        "node_phil_001"
+      ],
+      "description": {
+        "core_concept": "哲学通过质疑'自明性'来开启反思。所谓自明性，是指那些被视为理所当然、不言自明的前提和假设。哲学的任务就是追问这些看似不需要证明的东西，揭示其背后的深层问题。",
+        "testable_angles": {
+          "memory": "'自明性'的定义，哲学质疑自明性的基本含义",
+          "understanding": "为什么哲学要质疑'自明的'东西，自明性与反思的关系",
+          "application": "举例说明日常生活中哪些'自明的'观念值得哲学追问",
+          "analysis": "自明性的消解如何推动哲学思想的深化"
+        },
+        "confusable_points": "'自明性'与'确定性'的区别；质疑自明性与怀疑主义的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_003",
+      "name": "品味黑格尔关于\"哲学\"的比喻",
+      "prerequisites": [
+        "node_phil_001"
+      ],
+      "description": {
+        "core_concept": "黑格尔用'密涅瓦的猫头鹰在黄昏时起飞'比喻哲学的反思本质——哲学总是在事后才能理解现实。哲学不是预言未来，而是对已经发生之事的深层理解和概念把握。",
+        "testable_angles": {
+          "memory": "黑格尔'密涅瓦的猫头鹰'比喻的出处和基本含义",
+          "understanding": "为什么哲学是'黄昏时起飞'，反思性与事后性的关系",
+          "application": "用黑格尔的比喻解释哲学与时代的关系",
+          "analysis": "黑格尔的哲学观对理解哲学本质的启示与局限"
+        },
+        "confusable_points": "黑格尔的哲学观与马克思'改变世界'哲学观的区别"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_004",
+      "name": "哲学与哲学观",
+      "prerequisites": [
+        "node_phil_001",
+        "node_phil_003"
+      ],
+      "description": {
+        "core_concept": "哲学观是对哲学本身的理解和看法，不同的哲学观决定了不同的哲学形态。哲学史上存在多种哲学观：知识论哲学观、存在论哲学观、实践论哲学观等，它们从不同角度界定哲学的对象、方法和使命。",
+        "testable_angles": {
+          "memory": "主要哲学观的名称及其基本主张",
+          "understanding": "哲学观如何决定哲学的研究对象和方法",
+          "application": "辨别不同哲学家的哲学观属于哪种类型",
+          "analysis": "不同哲学观之间的内在张力与互补关系"
+        },
+        "confusable_points": "哲学观与世界观的区别；哲学观与哲学方法论的区别"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_005",
+      "name": "哲学的特性与功能",
+      "prerequisites": [
+        "node_phil_004"
+      ],
+      "description": {
+        "core_concept": "哲学具有反思性、批判性、总体性和超越性等基本特性。哲学的功能包括世界观功能、方法论功能、批判功能和价值导向功能，它为人类提供理解世界和自身的根本框架。",
+        "testable_angles": {
+          "memory": "哲学的四大特性和四大功能",
+          "understanding": "反思性与批判性的内在联系，总体性与超越性的关系",
+          "application": "结合实例说明哲学的批判功能如何发挥作用",
+          "analysis": "哲学的特性与功能之间的逻辑关系"
+        },
+        "confusable_points": "哲学的反思性与科学的反思性的区别；哲学的批判与日常批评的区别"
+      },
+      "difficulty_coeff": 0.5
+    },
+    {
+      "id": "node_phil_006",
+      "name": "当代哲学观及其哲学形态",
+      "prerequisites": [
+        "node_phil_004"
+      ],
+      "description": {
+        "core_concept": "当代哲学呈现多元化格局，主要包括分析哲学、现象学、存在主义、实用主义、马克思主义哲学等形态。每种哲学形态背后都有特定的哲学观，它们对哲学的任务、方法和目标有不同理解。",
+        "testable_angles": {
+          "memory": "当代主要哲学形态的名称及其核心主张",
+          "understanding": "不同哲学形态背后的哲学观差异",
+          "application": "判断某一哲学论述属于哪种哲学形态",
+          "analysis": "当代哲学多元化格局形成的原因和意义"
+        },
+        "confusable_points": "分析哲学与大陆哲学的区分标准；存在主义与现象学的关系"
+      },
+      "difficulty_coeff": 0.65
+    },
+    {
+      "id": "node_phil_007",
+      "name": "哲学与人类把握世界的基本方式",
+      "prerequisites": [
+        "node_phil_004",
+        "node_phil_005"
+      ],
+      "description": {
+        "core_concept": "人类把握世界的基本方式包括神话、宗教、艺术、科学和哲学等。哲学以概念思维的方式把握世界的整体和根本，区别于科学的实证方式、艺术的感性方式和宗教的信仰方式。",
+        "testable_angles": {
+          "memory": "人类把握世界的几种基本方式及其特征",
+          "understanding": "哲学把握世界的方式与其他方式的本质区别",
+          "application": "分析某一文化现象属于哪种把握世界的方式",
+          "analysis": "各种把握世界方式之间的互动与张力"
+        },
+        "confusable_points": "哲学与科学把握世界方式的区别；哲学与宗教的关系"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_008",
+      "name": "常识的世界图景",
+      "prerequisites": [
+        "node_phil_001"
+      ],
+      "description": {
+        "core_concept": "常识构建了一个以日常经验为基础的世界图景，它是人们在日常生活中形成的关于世界的基本看法和信念体系。常识的世界图景具有直接性、表面性和实用性的特点。",
+        "testable_angles": {
+          "memory": "常识世界图景的基本特征：直接性、表面性、实用性",
+          "understanding": "常识如何构建人们对世界的基本理解框架",
+          "application": "举例说明常识世界图景在日常生活中的表现",
+          "analysis": "常识世界图景的合理性与局限性"
+        },
+        "confusable_points": "常识的世界图景与科学的世界图景的区别"
+      },
+      "difficulty_coeff": 0.4
+    },
+    {
+      "id": "node_phil_009",
+      "name": "常识的思维方式",
+      "prerequisites": [
+        "node_phil_008"
+      ],
+      "description": {
+        "core_concept": "常识的思维方式以经验归纳和类比推理为主，具有非反思性和直觉性的特点。它依赖于日常经验的积累，遵循实用逻辑而非严格的形式逻辑。",
+        "testable_angles": {
+          "memory": "常识思维方式的基本特征和主要推理方式",
+          "understanding": "常识思维的非反思性与直觉性的含义",
+          "application": "辨别日常推理中哪些属于常识思维方式",
+          "analysis": "常识思维方式的优势与缺陷"
+        },
+        "confusable_points": "常识思维与科学思维的区别；经验归纳与科学归纳的区别"
+      },
+      "difficulty_coeff": 0.45
+    },
+    {
+      "id": "node_phil_010",
+      "name": "常识的价值规范",
+      "prerequisites": [
+        "node_phil_008"
+      ],
+      "description": {
+        "core_concept": "常识包含一套隐含的价值规范体系，它规定了日常生活中的善恶、美丑、对错标准。这些价值规范具有约定俗成性、地域性和历史性的特点。",
+        "testable_angles": {
+          "memory": "常识价值规范的基本特征：约定俗成性、地域性、历史性",
+          "understanding": "常识价值规范如何在日常生活中发挥作用",
+          "application": "分析某一社会习俗背后的常识价值规范",
+          "analysis": "常识价值规范的合理性基础及其局限"
+        },
+        "confusable_points": "常识的价值规范与伦理学的价值规范的区别"
+      },
+      "difficulty_coeff": 0.5
+    },
+    {
+      "id": "node_phil_011",
+      "name": "哲学对常识的超越",
+      "prerequisites": [
+        "node_phil_008",
+        "node_phil_009",
+        "node_phil_010"
+      ],
+      "description": {
+        "core_concept": "哲学通过反思和批判超越常识，揭示常识背后的深层假设和前提。哲学不是否定常识，而是对常识进行概念化、系统化的提升，使之从'知其然'走向'知其所以然'。",
+        "testable_angles": {
+          "memory": "哲学超越常识的基本方式和含义",
+          "understanding": "超越常识与否定常识的区别",
+          "application": "举例说明哲学如何对某一常识观念进行反思和超越",
+          "analysis": "哲学超越常识的必要性和可能性条件"
+        },
+        "confusable_points": "超越常识与脱离常识的区别；哲学反思与科学实证的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_012",
+      "name": "常识哲学化与哲学常识化",
+      "prerequisites": [
+        "node_phil_011"
+      ],
+      "description": {
+        "core_concept": "常识哲学化是将日常经验提升为哲学思考的过程，哲学常识化是将哲学智慧融入日常生活的过程。二者构成哲学与常识之间的双向互动关系。",
+        "testable_angles": {
+          "memory": "常识哲学化与哲学常识化的定义",
+          "understanding": "两个方向的转化过程及其内在联系",
+          "application": "举例说明常识哲学化和哲学常识化的具体表现",
+          "analysis": "双向转化对哲学发展和社会进步的意义"
+        },
+        "confusable_points": "常识哲学化与哲学通俗化的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_013",
+      "name": "理论思维的两种基本方式",
+      "prerequisites": [
+        "node_phil_005"
+      ],
+      "description": {
+        "core_concept": "理论思维有两种基本方式：科学思维和哲学思维。科学思维以实证为基础，追求确定性知识；哲学思维以反思为核心，追问前提和根据。二者相互区别又相互补充。",
+        "testable_angles": {
+          "memory": "科学思维和哲学思维的基本特征",
+          "understanding": "两种思维方式的本质区别与互补关系",
+          "application": "判断某一理论论证属于科学思维还是哲学思维",
+          "analysis": "两种思维方式在人类认识发展中的各自作用"
+        },
+        "confusable_points": "理论思维与经验思维的区别；科学思维与技术思维的区别"
+      },
+      "difficulty_coeff": 0.5
+    },
+    {
+      "id": "node_phil_014",
+      "name": "哲学对科学的反思关系",
+      "prerequisites": [
+        "node_phil_013"
+      ],
+      "description": {
+        "core_concept": "哲学对科学的关系本质上是反思关系：哲学不是在科学之外另建一套知识体系，而是对科学活动本身进行反思，追问科学的前提、方法、成果和意义。",
+        "testable_angles": {
+          "memory": "哲学对科学反思关系的基本含义",
+          "understanding": "反思关系与指导关系、从属关系的区别",
+          "application": "分析哲学如何对某一科学理论进行反思",
+          "analysis": "反思关系对科学发展的促进作用"
+        },
+        "confusable_points": "哲学反思科学与哲学指导科学的区别；科学哲学与科学本身的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_015",
+      "name": "反思科学活动的基础",
+      "prerequisites": [
+        "node_phil_014"
+      ],
+      "description": {
+        "core_concept": "哲学反思科学活动的基础，包括科学的本体论预设、认识论前提和方法论原则。科学活动建立在一系列未经证明的哲学假设之上，如自然的齐一性、因果律的普遍性等。",
+        "testable_angles": {
+          "memory": "科学活动的主要哲学预设和前提",
+          "understanding": "为什么科学需要哲学基础，这些基础为何不能由科学自身证明",
+          "application": "指出某一科学研究背后的哲学预设",
+          "analysis": "科学基础的哲学反思对科学发展的意义"
+        },
+        "confusable_points": "科学的哲学基础与科学的经验基础的区别"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_016",
+      "name": "反思科学研究的成果",
+      "prerequisites": [
+        "node_phil_014"
+      ],
+      "description": {
+        "core_concept": "哲学对科学成果的反思包括追问科学理论的真理性质、科学知识的确定性程度、科学解释的本质等问题。这种反思揭示了科学知识的可错性和历史性。",
+        "testable_angles": {
+          "memory": "哲学反思科学成果的主要问题领域",
+          "understanding": "科学知识的可错性与历史性的含义",
+          "application": "用哲学视角分析某一科学理论的局限性",
+          "analysis": "对科学成果的哲学反思如何促进科学进步"
+        },
+        "confusable_points": "科学的可错性与科学的不可靠性的区别"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_017",
+      "name": "反思科学发展的逻辑",
+      "prerequisites": [
+        "node_phil_015",
+        "node_phil_016"
+      ],
+      "description": {
+        "core_concept": "哲学反思科学发展的逻辑，探讨科学是如何进步的。主要理论包括累积进步观、科学革命论（库恩）、证伪主义（波普尔）和研究纲领方法论（拉卡托斯）等。",
+        "testable_angles": {
+          "memory": "主要科学发展观的代表人物和核心主张",
+          "understanding": "不同科学发展观之间的分歧与争论焦点",
+          "application": "用不同科学发展观解释某一科学史事件",
+          "analysis": "各种科学发展观的合理性与局限性"
+        },
+        "confusable_points": "库恩的范式转换与波普尔的证伪主义的区别"
+      },
+      "difficulty_coeff": 0.65
+    },
+    {
+      "id": "node_phil_018",
+      "name": "反思时代的科学精神",
+      "prerequisites": [
+        "node_phil_014"
+      ],
+      "description": {
+        "core_concept": "科学精神是科学活动中形成的基本态度和价值取向，包括求真精神、怀疑精神、实证精神和理性精神。哲学反思科学精神的内涵、价值及其在当代社会中的意义。",
+        "testable_angles": {
+          "memory": "科学精神的基本内涵和主要构成要素",
+          "understanding": "科学精神与科学主义的区别",
+          "application": "分析当代社会中科学精神的体现与缺失",
+          "analysis": "科学精神在当代社会的价值与局限"
+        },
+        "confusable_points": "科学精神与科学主义的区别；科学精神与技术理性的区别"
+      },
+      "difficulty_coeff": 0.5
+    },
+    {
+      "id": "node_phil_019",
+      "name": "哲学的基本问题",
+      "prerequisites": [
+        "node_phil_005",
+        "node_phil_013"
+      ],
+      "description": {
+        "core_concept": "哲学的基本问题是思维与存在的关系问题，包括两个方面：思维与存在何者为第一性（本体论问题），以及思维能否认识存在（认识论问题）。这一问题贯穿哲学史始终。",
+        "testable_angles": {
+          "memory": "哲学基本问题的两个方面及其含义",
+          "understanding": "为什么思维与存在的关系是哲学的基本问题",
+          "application": "判断某一哲学命题涉及哲学基本问题的哪个方面",
+          "analysis": "哲学基本问题在不同历史时期的表现形式"
+        },
+        "confusable_points": "哲学基本问题与哲学的具体问题的区别；本体论问题与认识论问题的关系"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_020",
+      "name": "哲学的反思活动",
+      "prerequisites": [
+        "node_phil_002",
+        "node_phil_019"
+      ],
+      "description": {
+        "core_concept": "哲学的反思是对思想本身的思想，是思维对自身活动及其前提的审视和追问。反思不同于一般的思考，它具有自我指涉性、批判性和超越性的特点。",
+        "testable_angles": {
+          "memory": "哲学反思的定义和基本特征",
+          "understanding": "反思与一般思考的本质区别",
+          "application": "举例说明哲学反思在具体问题中的运用",
+          "analysis": "反思活动的可能性条件和内在限度"
+        },
+        "confusable_points": "哲学反思与心理学的内省的区别；反思与批判的关系"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_021",
+      "name": "哲学的前提批判",
+      "prerequisites": [
+        "node_phil_020"
+      ],
+      "description": {
+        "core_concept": "哲学的前提批判是对一切知识、信念和实践的前提进行审查和追问。它不预设任何不可质疑的出发点，而是将一切'理所当然'的东西都纳入批判性审视的范围。",
+        "testable_angles": {
+          "memory": "前提批判的定义和基本含义",
+          "understanding": "前提批判与一般批判的区别，为什么哲学必须进行前提批判",
+          "application": "对某一理论或观点进行前提批判的示范",
+          "analysis": "前提批判的彻底性与可能的困境（如无穷后退问题）"
+        },
+        "confusable_points": "前提批判与怀疑一切的区别；前提批判与解构的关系"
+      },
+      "difficulty_coeff": 0.65
+    },
+    {
+      "id": "node_phil_022",
+      "name": "哲学与人的存在方式",
+      "prerequisites": [
+        "node_phil_007"
+      ],
+      "description": {
+        "core_concept": "哲学根植于人的存在方式。人是一种能够追问自身存在意义的存在者，哲学正是这种追问的系统化表达。人的实践性、社会性和历史性构成了哲学思考的生活基础。",
+        "testable_angles": {
+          "memory": "人的存在方式的基本特征：实践性、社会性、历史性",
+          "understanding": "哲学与人的存在方式之间的内在关联",
+          "application": "分析某一哲学问题如何源于人的特定存在方式",
+          "analysis": "人的存在方式如何决定哲学问题的提出和解答方式"
+        },
+        "confusable_points": "人的存在方式与动物的生存方式的区别；存在方式与生活方式的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_023",
+      "name": "哲学与社会的自我意识",
+      "prerequisites": [
+        "node_phil_022"
+      ],
+      "description": {
+        "core_concept": "哲学是社会的自我意识，是时代精神的精华。每个时代的哲学都反映了该时代的根本问题和精神追求，哲学通过概念思维的方式表达和提升社会的自我理解。",
+        "testable_angles": {
+          "memory": "马克思关于哲学是'时代精神的精华'的论断",
+          "understanding": "哲学如何成为社会的自我意识",
+          "application": "分析某一历史时期的哲学如何反映该时代的精神",
+          "analysis": "哲学作为社会自我意识的功能与局限"
+        },
+        "confusable_points": "社会的自我意识与个人的自我意识的区别；哲学与意识形态的关系"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_024",
+      "name": "哲学与时代精神的精华",
+      "prerequisites": [
+        "node_phil_023"
+      ],
+      "description": {
+        "core_concept": "哲学作为时代精神的精华，不是简单地反映时代，而是对时代精神进行概念化的提炼和升华。真正的哲学能够把握时代的根本矛盾，为时代提供思想引领。",
+        "testable_angles": {
+          "memory": "'时代精神的精华'这一命题的出处和基本含义",
+          "understanding": "哲学如何提炼和升华时代精神",
+          "application": "分析某一伟大哲学体系如何体现其时代精神",
+          "analysis": "哲学引领时代与哲学滞后于时代的辩证关系"
+        },
+        "confusable_points": "时代精神与社会思潮的区别；哲学的时代性与哲学的永恒性的关系"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_025",
+      "name": "\"在\"：存在论或本体论问题",
+      "prerequisites": [
+        "node_phil_019"
+      ],
+      "description": {
+        "core_concept": "存在论（本体论）是哲学追问'存在'本身的学问，探讨'什么是存在''存在的基本结构是什么'等根本问题。从古希腊的'存在之为存在'到海德格尔的'存在的意义'，本体论始终是哲学的核心领域。",
+        "testable_angles": {
+          "memory": "存在论/本体论的基本含义和核心问题",
+          "understanding": "存在论问题与日常'存在'概念的区别",
+          "application": "辨别某一哲学论述是否属于存在论问题",
+          "analysis": "存在论在哲学史上的演变及其当代意义"
+        },
+        "confusable_points": "存在论与宇宙论的区别；本体论的'本体'与日常语言中'本体'的区别"
+      },
+      "difficulty_coeff": 0.65
+    },
+    {
+      "id": "node_phil_026",
+      "name": "\"真\"：认识论和逻辑学问题",
+      "prerequisites": [
+        "node_phil_019",
+        "node_phil_020"
+      ],
+      "description": {
+        "core_concept": "认识论探讨知识的本质、来源、范围和确定性问题；逻辑学研究正确思维的形式和规律。二者共同关注'真'的问题：什么是真理，如何获得真理，如何保证推理的有效性。",
+        "testable_angles": {
+          "memory": "认识论和逻辑学的基本问题和研究对象",
+          "understanding": "认识论的'真'与逻辑学的'真'的区别与联系",
+          "application": "判断某一哲学讨论属于认识论还是逻辑学范畴",
+          "analysis": "认识论与逻辑学在追求'真'的过程中的互补关系"
+        },
+        "confusable_points": "认识论的真理与科学的真理的区别；形式逻辑与辩证逻辑的区别"
+      },
+      "difficulty_coeff": 0.65
+    },
+    {
+      "id": "node_phil_027",
+      "name": "\"善\"：伦理学和价值论问题",
+      "prerequisites": [
+        "node_phil_019"
+      ],
+      "description": {
+        "core_concept": "伦理学探讨道德的本质、标准和根据，价值论研究价值的本质和评价标准。二者共同关注'善'的问题：什么是善，善的标准是什么，人应当如何行动。",
+        "testable_angles": {
+          "memory": "伦理学和价值论的基本问题",
+          "understanding": "伦理学的'善'与价值论的'价值'的关系",
+          "application": "用伦理学视角分析某一道德困境",
+          "analysis": "事实判断与价值判断的区别及其哲学意义"
+        },
+        "confusable_points": "伦理学与道德学的区别；价值论与价值观的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_028",
+      "name": "\"美\"：哲学层面的美学问题",
+      "prerequisites": [
+        "node_phil_019"
+      ],
+      "description": {
+        "core_concept": "美学从哲学层面探讨美的本质、审美经验和艺术的哲学意义。哲学美学不同于艺术批评，它追问美的根据、审美判断的普遍性以及艺术与真理的关系等根本问题。",
+        "testable_angles": {
+          "memory": "哲学美学的基本问题和研究对象",
+          "understanding": "哲学美学与艺术批评的区别",
+          "application": "用哲学美学视角分析某一审美现象",
+          "analysis": "美与真、善的关系及其哲学意义"
+        },
+        "confusable_points": "哲学美学与经验美学的区别；审美判断与认识判断的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_029",
+      "name": "\"人\"：关于人的哲学",
+      "prerequisites": [
+        "node_phil_022",
+        "node_phil_025"
+      ],
+      "description": {
+        "core_concept": "哲学人学探讨人的本质、人的存在方式和人的价值等根本问题。从古希腊'认识你自己'到现代哲学人学，对人的追问始终是哲学的核心关切之一。",
+        "testable_angles": {
+          "memory": "哲学人学的基本问题和主要流派",
+          "understanding": "哲学对人的追问与科学对人的研究的区别",
+          "application": "用哲学人学视角分析某一关于人的争论",
+          "analysis": "人的本质问题在哲学史上的演变"
+        },
+        "confusable_points": "哲学人学与人类学的区别；人的本质与人性的区别"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_030",
+      "name": "考察哲学派别斗争的方法论",
+      "prerequisites": [
+        "node_phil_006",
+        "node_phil_019"
+      ],
+      "description": {
+        "core_concept": "考察哲学派别斗争需要科学的方法论，包括历史与逻辑相统一的方法、具体问题具体分析的方法。不能简单地以对错评判哲学派别，而要理解每种派别产生的历史背景和理论贡献。",
+        "testable_angles": {
+          "memory": "考察哲学派别斗争的基本方法论原则",
+          "understanding": "为什么不能简单以对错评判哲学派别",
+          "application": "运用方法论原则分析某一哲学争论",
+          "analysis": "历史与逻辑相统一方法在哲学史研究中的运用"
+        },
+        "confusable_points": "哲学派别斗争与学术争论的区别；方法论与具体方法的区别"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_031",
+      "name": "唯物主义与唯心主义",
+      "prerequisites": [
+        "node_phil_025",
+        "node_phil_030"
+      ],
+      "description": {
+        "core_concept": "唯物主义主张物质是世界的本原，意识是物质的产物；唯心主义主张精神或意识是世界的本原。这是哲学基本问题第一方面的两种对立回答，贯穿哲学史始终。",
+        "testable_angles": {
+          "memory": "唯物主义和唯心主义的基本定义和主要形态",
+          "understanding": "唯物主义与唯心主义对立的实质",
+          "application": "判断某一哲学观点属于唯物主义还是唯心主义",
+          "analysis": "唯物主义和唯心主义各自的历史贡献与局限"
+        },
+        "confusable_points": "朴素唯物主义与辩证唯物主义的区别；主观唯心主义与客观唯心主义的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_032",
+      "name": "辩证法与形而上学",
+      "prerequisites": [
+        "node_phil_030"
+      ],
+      "description": {
+        "core_concept": "辩证法主张事物是普遍联系和永恒发展的，矛盾是事物发展的根本动力；形而上学以孤立、静止、片面的观点看待事物。二者是关于世界状态和发展方式的两种对立哲学方法。",
+        "testable_angles": {
+          "memory": "辩证法和形而上学的基本特征和核心主张",
+          "understanding": "辩证法与形而上学对立的实质",
+          "application": "用辩证法和形而上学分别分析某一现象",
+          "analysis": "辩证法在哲学史上的发展历程"
+        },
+        "confusable_points": "古代辩证法与现代辩证法的区别；形而上学（方法论意义）与形而上学（本体论意义）的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_033",
+      "name": "经验论与唯理论",
+      "prerequisites": [
+        "node_phil_026",
+        "node_phil_030"
+      ],
+      "description": {
+        "core_concept": "经验论主张知识来源于感觉经验，唯理论主张知识来源于理性直觉和演绎推理。这是认识论领域的基本对立，近代哲学中以洛克、休谟为经验论代表，笛卡尔、莱布尼茨为唯理论代表。",
+        "testable_angles": {
+          "memory": "经验论和唯理论的基本主张及代表人物",
+          "understanding": "经验论与唯理论争论的实质和焦点",
+          "application": "判断某一认识论观点属于经验论还是唯理论",
+          "analysis": "康德如何试图调和经验论与唯理论的对立"
+        },
+        "confusable_points": "经验论与经验主义的区别；唯理论与理性主义的关系"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_034",
+      "name": "科学主义与人本主义",
+      "prerequisites": [
+        "node_phil_018",
+        "node_phil_030"
+      ],
+      "description": {
+        "core_concept": "科学主义以自然科学为知识的典范，主张用科学方法解决一切问题；人本主义强调人的主体性、自由和价值，反对将人还原为科学对象。这是现当代哲学的重要分野。",
+        "testable_angles": {
+          "memory": "科学主义和人本主义的基本主张及代表流派",
+          "understanding": "科学主义与人本主义对立的根源",
+          "application": "分析某一当代争论中科学主义与人本主义的冲突",
+          "analysis": "科学主义与人本主义的融合可能性"
+        },
+        "confusable_points": "科学主义与科学精神的区别；人本主义与人道主义的区别"
+      },
+      "difficulty_coeff": 0.6
+    },
+    {
+      "id": "node_phil_035",
+      "name": "哲学历史演进的多重透视",
+      "prerequisites": [
+        "node_phil_006",
+        "node_phil_030"
+      ],
+      "description": {
+        "core_concept": "哲学史可以从多重视角来透视：问题史视角关注哲学问题的提出与演变，人物史视角关注哲学家的思想贡献，派别史视角关注哲学流派的兴衰更替。多重透视有助于全面理解哲学的历史发展。",
+        "testable_angles": {
+          "memory": "透视哲学史的几种主要视角及其特点",
+          "understanding": "不同透视视角各自的优势与局限",
+          "application": "从不同视角分析某一哲学史时期",
+          "analysis": "多重透视方法对理解哲学史的意义"
+        },
+        "confusable_points": "哲学史与思想史的区别；哲学史的内在逻辑与外在历史的关系"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_036",
+      "name": "哲学历史演进的基本特征",
+      "prerequisites": [
+        "node_phil_035"
+      ],
+      "description": {
+        "core_concept": "哲学历史演进具有继承性与创新性统一、民族性与世界性统一、时代性与超越性统一等基本特征。哲学的发展不是简单的线性进步，而是在对话、批判和综合中螺旋式上升。",
+        "testable_angles": {
+          "memory": "哲学历史演进的基本特征",
+          "understanding": "继承与创新、民族性与世界性如何统一",
+          "application": "用哲学史实例说明哲学演进的某一特征",
+          "analysis": "哲学的螺旋式发展与科学的累积式发展的区别"
+        },
+        "confusable_points": "哲学的进步与科学的进步的区别；哲学的民族性与哲学的地方性的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_037",
+      "name": "哲学的现代革命和当代趋向",
+      "prerequisites": [
+        "node_phil_036",
+        "node_phil_031",
+        "node_phil_032"
+      ],
+      "description": {
+        "core_concept": "哲学的现代革命以马克思主义哲学的诞生为标志，实现了从解释世界到改变世界的转变。当代哲学呈现出实践转向、语言转向、生活世界转向等多重趋向。",
+        "testable_angles": {
+          "memory": "哲学现代革命的标志和当代哲学的主要转向",
+          "understanding": "马克思主义哲学革命的实质和意义",
+          "application": "分析当代某一哲学思潮体现了哪种转向",
+          "analysis": "当代哲学多重转向之间的内在联系"
+        },
+        "confusable_points": "哲学的现代革命与科学革命的区别；语言转向与实践转向的关系"
+      },
+      "difficulty_coeff": 0.7
+    },
+    {
+      "id": "node_phil_038",
+      "name": "构建中国自主哲学知识体系",
+      "prerequisites": [
+        "node_phil_037"
+      ],
+      "description": {
+        "core_concept": "构建中国自主哲学知识体系是当代中国哲学的重要使命，需要在马克思主义指导下，继承中国传统哲学智慧，吸收世界哲学优秀成果，回应中国现代化实践提出的哲学问题。",
+        "testable_angles": {
+          "memory": "构建中国自主哲学知识体系的基本要求和路径",
+          "understanding": "为什么需要构建中国自主的哲学知识体系",
+          "application": "分析中国传统哲学中哪些资源可以为当代哲学建设所用",
+          "analysis": "自主性与开放性在哲学知识体系建设中的辩证关系"
+        },
+        "confusable_points": "自主知识体系与封闭知识体系的区别；中国哲学与中国的哲学的区别"
+      },
+      "difficulty_coeff": 0.65
+    },
+    {
+      "id": "node_phil_039",
+      "name": "哲学的品格",
+      "prerequisites": [
+        "node_phil_005",
+        "node_phil_021",
+        "node_phil_024"
+      ],
+      "description": {
+        "core_concept": "哲学的品格包括爱智的追求、批判的精神、反思的态度和超越的境界。哲学品格是哲学区别于其他学科的根本特质，也是哲学修养的核心目标。",
+        "testable_angles": {
+          "memory": "哲学品格的基本内涵和构成要素",
+          "understanding": "哲学品格各要素之间的内在联系",
+          "application": "分析某一哲学家如何体现哲学的品格",
+          "analysis": "哲学品格在当代社会的价值和意义"
+        },
+        "confusable_points": "哲学的品格与哲学家的个人品格的区别；哲学品格与科学精神的区别"
+      },
+      "difficulty_coeff": 0.55
+    },
+    {
+      "id": "node_phil_040",
+      "name": "哲学思维的训练",
+      "prerequisites": [
+        "node_phil_020",
+        "node_phil_021"
+      ],
+      "description": {
+        "core_concept": "哲学思维训练包括概念分析能力、逻辑推理能力、批判性思维能力和辩证思维能力的培养。通过阅读经典文本、参与哲学对话和进行哲学写作来提升哲学思维水平。",
+        "testable_angles": {
+          "memory": "哲学思维训练的主要内容和方法",
+          "understanding": "哲学思维与日常思维的区别",
+          "application": "运用哲学思维方法分析某一问题",
+          "analysis": "哲学思维训练对个人发展和社会进步的意义"
+        },
+        "confusable_points": "哲学思维训练与逻辑训练的区别；批判性思维与否定性思维的区别"
+      },
+      "difficulty_coeff": 0.5
+    },
+    {
+      "id": "node_phil_041",
+      "name": "哲学态度的培养",
+      "prerequisites": [
+        "node_phil_039",
+        "node_phil_040"
+      ],
+      "description": {
+        "core_concept": "哲学态度是一种面对世界和自身的根本姿态，包括惊异与好奇、怀疑与追问、开放与包容、审慎与谦逊。培养哲学态度是哲学教育的最终目标，它使人能够更深刻地理解和面对生活。",
+        "testable_angles": {
+          "memory": "哲学态度的基本构成要素",
+          "understanding": "哲学态度与日常态度的区别",
+          "application": "分析哲学态度在面对具体生活问题时的表现",
+          "analysis": "哲学态度对个人精神成长的意义"
+        },
+        "confusable_points": "哲学态度与哲学立场的区别；哲学的怀疑态度与消极怀疑的区别"
+      },
+      "difficulty_coeff": 0.5
+    }
+  ]
+}

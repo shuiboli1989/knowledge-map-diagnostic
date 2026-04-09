@@ -31,6 +31,7 @@ Thumbs.db
 
 # Claude Code
 .claude/
+.clawhub/
 
 # Docs
 *.docx
@@ -41,3 +42,6 @@ data/review_questions_*.html
 # One-off scripts
 shuffle_options.py
 test_api.py
+gen_phil_questions.py
+retry_node13.py
+fix_json.py
