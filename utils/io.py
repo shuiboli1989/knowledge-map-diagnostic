@@ -57,7 +57,9 @@ def save_student(student_data: dict) -> None:
             # 只更新当前课程的状态
             existing_data['courses'][course_id] = {
                 'node_states': student_data.get('node_states', {}),
-                'answer_history': student_data.get('answer_history', [])
+                'answer_history': student_data.get('answer_history', []),
+                'survey_results': student_data.get('survey_results'),
+                'learning_path': student_data.get('learning_path')
             }
             # 保存更新后的数据
             save_json(file_path, existing_data)
@@ -71,7 +73,9 @@ def save_student(student_data: dict) -> None:
             'courses': {
                 course_id: {
                     'node_states': student_data.get('node_states', {}),
-                    'answer_history': student_data.get('answer_history', [])
+                    'answer_history': student_data.get('answer_history', []),
+                    'survey_results': student_data.get('survey_results'),
+                    'learning_path': student_data.get('learning_path')
                 }
             }
         }
@@ -111,7 +115,9 @@ def load_student(student_id: str, course_id: str = None) -> dict | None:
                 'student_id': student_id,
                 'course_id': course_id,
                 'node_states': course_data.get('node_states', {}),
-                'answer_history': course_data.get('answer_history', [])
+                'answer_history': course_data.get('answer_history', []),
+                'survey_results': course_data.get('survey_results'),
+                'learning_path': course_data.get('learning_path')
             }
         return None
     

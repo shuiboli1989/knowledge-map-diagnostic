@@ -9,7 +9,9 @@ import streamlit as st
 from pathlib import Path
 from core.initializer import create_student_state, record_answer
 from core.bkt import update_student_state
-from core.cat import select_next_node, select_next_question
+from core.cat import select_next_node, select_next_question, MASTERY_THRESHOLD
+from core.survey import get_modules, apply_survey, get_anchor_modules, apply_anchor_result, FAMILIARITY_LABELS
+from core.learning_path import generate_full_path, generate_target_path, get_current_node, advance_path
 from utils.io import load_json, save_student, load_student
 from pyvis.network import Network
 import tempfile
@@ -279,7 +281,118 @@ if student_id:
         student_data = create_student_state(student_id, course_id, graph_data)
         save_student(student_data)
         st.sidebar.success("学生状态已初始化")
-    
+
+    # ========== 入学问卷流程 ==========
+    modules = get_modules(graph_data)
+    has_survey = student_data.get('survey_results') is not None
+
+    # 初始化问卷相关 session_state
+    if 'survey_step' not in st.session_state:
+        st.session_state.survey_step = "done" if has_survey else ("survey" if modules else "done")
+    # 课程切换时重置问卷状态
+    if has_survey:
+        st.session_state.survey_step = "done"
+
+    if st.session_state.survey_step == "survey" and modules:
+        st.subheader("入学问卷")
+        st.markdown("请根据你的实际情况，评估对以下各模块的熟悉程度：")
+
+        with st.form("survey_form"):
+            responses = {}
+            for mod in modules:
+                level = st.radio(
+                    mod['name'],
+                    options=[0, 1, 2, 3],
+                    format_func=lambda x: FAMILIARITY_LABELS[x],
+                    horizontal=True,
+                    key=f"survey_{mod['id']}"
+                )
+                responses[mod['id']] = level
+
+            submitted = st.form_submit_button("提交问卷")
+            if submitted:
+                student_data = apply_survey(student_data, graph_data, responses)
+                save_student(student_data)
+
+                # 检查是否需要锚点测试
+                anchor_mods = get_anchor_modules(responses)
+                if anchor_mods:
+                    st.session_state.survey_step = "anchor"
+                    st.session_state.anchor_queue = anchor_mods
+                    st.session_state.anchor_index = 0
+                    st.session_state.anchor_answered = False
+                else:
+                    st.session_state.survey_step = "done"
+                st.rerun()
+        st.stop()
+
+    elif st.session_state.survey_step == "anchor" and modules:
+        anchor_queue = st.session_state.get('anchor_queue', [])
+        anchor_idx = st.session_state.get('anchor_index', 0)
+
+        if anchor_idx >= len(anchor_queue):
+            st.session_state.survey_step = "done"
+            st.rerun()
+        else:
+            current_mod_id = anchor_queue[anchor_idx]
+            # 找到模块信息
+            current_mod = None
+            for m in modules:
+                if m['id'] == current_mod_id:
+                    current_mod = m
+                    break
+
+            if current_mod:
+                st.subheader("锚点验证测试")
+                st.markdown(f"你自评对 **{current_mod['name']}** 有基础，现在验证一下：")
+                st.markdown(f"*（{anchor_idx + 1}/{len(anchor_queue)}）*")
+
+                # 从代表性节点选一道题
+                rep_node_id = current_mod.get('representative_node_id')
+                anchor_q = select_next_question(rep_node_id, student_data, questions)
+
+                if anchor_q and not st.session_state.get('anchor_answered', False):
+                    st.markdown(f"**题目：** {anchor_q.get('question', '')}")
+                    options = anchor_q.get('options', [])
+                    selected = st.radio("选择答案", options, index=None, key=f"anchor_radio_{anchor_idx}", label_visibility="collapsed")
+
+                    if st.button("提交验证", key=f"anchor_submit_{anchor_idx}") and selected:
+                        correct_answer = anchor_q.get('answer', '')
+                        is_correct = selected.startswith(correct_answer)
+                        student_data = apply_anchor_result(student_data, graph_data, current_mod_id, is_correct)
+                        # 记录答题
+                        student_data = record_answer(student_data, rep_node_id, anchor_q.get('id'), is_correct)
+                        student_data = update_student_state(student_data, rep_node_id, is_correct)
+                        save_student(student_data)
+
+                        if is_correct:
+                            st.success(f"验证通过！{current_mod['name']} 的掌握评估已确认。")
+                        else:
+                            st.warning(f"验证未通过，已下调 {current_mod['name']} 的掌握概率。")
+
+                        st.session_state.anchor_index = anchor_idx + 1
+                        st.session_state.anchor_answered = False
+                        st.rerun()
+                elif not anchor_q:
+                    # 没有可用题目，跳过
+                    st.session_state.anchor_index = anchor_idx + 1
+                    st.rerun()
+            else:
+                st.session_state.anchor_index = anchor_idx + 1
+                st.rerun()
+        st.stop()
+
+    # 侧边栏：重新做问卷按钮
+    if has_survey and modules:
+        if st.sidebar.button("重新做问卷", key="redo_survey"):
+            st.session_state.survey_step = "survey"
+            # 重置学生状态为初始值
+            student_data = create_student_state(student_id, course_id, graph_data)
+            student_data['survey_results'] = None
+            student_data['learning_path'] = None
+            save_student(student_data)
+            st.rerun()
+
     # 显示当前各节点掌握概率
     st.sidebar.markdown("<h3 style='color: #1A1A1A;'>知识点掌握情况</h3>", unsafe_allow_html=True)
     for node in graph_data.get('nodes', []):
@@ -308,7 +421,7 @@ if student_id:
             """, unsafe_allow_html=True)
 
 # 主区域
-tab1, tab2 = st.tabs(["自适应诊断", "知识图谱"])
+tab1, tab2, tab3 = st.tabs(["自适应诊断", "学习路径", "知识图谱"])
 
 with tab1:
     st.subheader("自适应诊断")
@@ -488,6 +601,291 @@ with tab1:
             st.info("没有可用的题目")
 
 with tab2:
+    st.subheader("学习路径")
+
+    if not student_id:
+        st.warning("请在侧边栏输入学生ID")
+    else:
+        # 加载学生状态
+        student_data = load_student(student_id, course_id)
+        if not student_data:
+            student_data = create_student_state(student_id, course_id, graph_data)
+            save_student(student_data)
+
+        modules = get_modules(graph_data)
+
+        # 初始化学习路径 session_state
+        if 'lp_question' not in st.session_state:
+            st.session_state.lp_question = None
+        if 'lp_answered' not in st.session_state:
+            st.session_state.lp_answered = False
+        if 'lp_selected' not in st.session_state:
+            st.session_state.lp_selected = None
+
+        # 模式选择
+        path_mode = st.radio(
+            "选择学习模式",
+            ["全图谱通关", "指定目标模块"],
+            horizontal=True,
+            key="path_mode"
+        )
+
+        target_node_ids = []
+        if path_mode == "指定目标模块" and modules:
+            selected_mods = st.multiselect(
+                "选择目标模块",
+                options=[m['id'] for m in modules],
+                format_func=lambda x: next((m['name'] for m in modules if m['id'] == x), x),
+                key="target_modules"
+            )
+            for m in modules:
+                if m['id'] in selected_mods:
+                    target_node_ids.extend(m['node_ids'])
+
+        if st.button("生成学习路径", key="gen_path"):
+            if path_mode == "全图谱通关":
+                path_nodes = generate_full_path(graph_data, student_data)
+                mode = "full"
+                target_mods = []
+            else:
+                path_nodes = generate_target_path(graph_data, student_data, target_node_ids)
+                mode = "target"
+                target_mods = st.session_state.get('target_modules', [])
+
+            student_data['learning_path'] = {
+                'mode': mode,
+                'target_modules': target_mods,
+                'path_nodes': path_nodes,
+                'current_index': 0
+            }
+            # 跳过已掌握的起始节点
+            student_data = advance_path(student_data, graph_data)
+            save_student(student_data)
+            st.session_state.lp_question = None
+            st.session_state.lp_answered = False
+            st.session_state.lp_selected = None
+            st.rerun()
+
+        # 显示学习路径
+        lp = student_data.get('learning_path')
+        if lp and lp.get('path_nodes'):
+            path_nodes = lp['path_nodes']
+            current_idx = lp.get('current_index', 0)
+            node_map = {n['id']: n['name'] for n in graph_data.get('nodes', [])}
+            node_states = student_data.get('node_states', {})
+
+            # 路径进度
+            mastered_count = sum(
+                1 for nid in path_nodes
+                if node_states.get(nid, {}).get('p_mastery', 0) >= MASTERY_THRESHOLD
+            )
+            st.progress(mastered_count / len(path_nodes) if path_nodes else 0)
+            st.markdown(f"进度：{mastered_count}/{len(path_nodes)} 个知识点已掌握")
+
+            # 可视化学习路径图谱
+            path_set = set(path_nodes)
+            path_order = {nid: i + 1 for i, nid in enumerate(path_nodes)}
+            current_node_id = get_current_node(student_data)
+
+            lp_net = Network(height='500px', width='100%', directed=True)
+            lp_net.set_options("""
+            var options = {
+              "layout": {"hierarchical": {"enabled": false}},
+              "edges": {
+                "color": {"color": "#DDDDDD", "highlight": "#D42B2B"},
+                "arrows": {"to": {"enabled": true}}
+              },
+              "nodes": {
+                "font": {"size": 14, "face": "Arial", "color": "#FFFFFF", "strokeWidth": 1, "strokeColor": "#000000"},
+                "shape": "circle",
+                "borderWidth": 2,
+                "shadow": {"enabled": true, "size": 5, "x": 0, "y": 0, "color": "rgba(0,0,0,0.3)"}
+              },
+              "interaction": {"hover": true, "tooltipDelay": 200, "zoomView": true, "dragNodes": true, "dragView": true},
+              "physics": {
+                "enabled": true,
+                "stabilization": {"enabled": true, "iterations": 1000, "updateInterval": 50, "fit": true},
+                "barnesHut": {"gravitationalConstant": -80000, "centralGravity": 0.3, "springLength": 100, "springConstant": 0.04, "damping": 0.09}
+              }
+            }
+            """)
+
+            all_node_ids = set()
+            for node in graph_data.get('nodes', []):
+                nid = node.get('id')
+                all_node_ids.add(nid)
+                node_name = node.get('name', nid)
+                p = node_states.get(nid, {}).get('p_mastery', 0)
+
+                if nid in path_set:
+                    order_num = path_order[nid]
+                    if p >= MASTERY_THRESHOLD:
+                        # 已掌握的路径节点：绿色 + 勾号
+                        color = "#15803D"
+                        font_color = "#FFFFFF"
+                        border_color = "#0D5C2A"
+                        label = f"✓ {order_num}. {node_name}\n{p*100:.0f}%"
+                        border_width = 3
+                        size = 35
+                    elif nid == current_node_id:
+                        # 当前节点：红色高亮
+                        color = "#D42B2B"
+                        font_color = "#FFFFFF"
+                        border_color = "#A01E1E"
+                        label = f"▶ {order_num}. {node_name}\n{p*100:.0f}%"
+                        border_width = 4
+                        size = 40
+                    else:
+                        # 待学习的路径节点：橙色
+                        color = "#FF9500"
+                        font_color = "#FFFFFF"
+                        border_color = "#CC7700"
+                        label = f"{order_num}. {node_name}\n{p*100:.0f}%"
+                        border_width = 3
+                        size = 35
+                else:
+                    if p >= MASTERY_THRESHOLD:
+                        # 非路径但已掌握的节点：绿色（小尺寸）
+                        color = "#15803D"
+                        font_color = "#FFFFFF"
+                        border_color = "#0D5C2A"
+                        label = f"✓ {node_name}\n{p*100:.0f}%"
+                        border_width = 2
+                        size = 28
+                    else:
+                        # 非路径未掌握节点：灰色
+                        color = "#E8E8E8"
+                        font_color = "#AAAAAA"
+                        border_color = "#DDDDDD"
+                        label = f"{node_name}\n{p*100:.0f}%"
+                        border_width = 1
+                        size = 22
+
+                lp_net.add_node(nid, label=label, size=size, color=color,
+                                font={"color": font_color, "size": 14, "face": "Arial", "strokeWidth": 1, "strokeColor": "#000000"},
+                                borderWidth=border_width, borderColor=border_color)
+
+            for node in graph_data.get('nodes', []):
+                nid = node.get('id')
+                for prereq_id in node.get('prerequisites', []):
+                    if prereq_id in all_node_ids:
+                        # 路径上的边用深色，其他用浅色
+                        if nid in path_set and prereq_id in path_set:
+                            edge_color = "#888888"
+                            edge_width = 2
+                        else:
+                            edge_color = "#E0E0E0"
+                            edge_width = 1
+                        lp_net.add_edge(prereq_id, nid, color=edge_color, width=edge_width)
+
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as f:
+                lp_net.write_html(f.name)
+                lp_temp = f.name
+            with open(lp_temp, 'r', encoding='utf-8') as f:
+                lp_html = f.read()
+            st.components.v1.html(lp_html, height=520)
+
+            # 图例
+            st.markdown("""
+            <div style="display: flex; gap: 20px; justify-content: center; margin: 8px 0 16px 0; font-size: 13px;">
+                <span><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#D42B2B;vertical-align:middle;margin-right:4px;"></span>当前学习</span>
+                <span><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#FF9500;vertical-align:middle;margin-right:4px;"></span>待学习</span>
+                <span><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#15803D;vertical-align:middle;margin-right:4px;"></span>已掌握</span>
+                <span><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#E8E8E8;vertical-align:middle;margin-right:4px;"></span>不在路径中</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # 当前节点出题
+            current_node = get_current_node(student_data)
+            if current_node:
+                current_name = node_map.get(current_node, current_node)
+                st.markdown("---")
+                st.markdown(f"#### 当前学习：{current_name}")
+
+                # 获取题目
+                if not st.session_state.lp_question:
+                    st.session_state.lp_question = select_next_question(current_node, student_data, questions)
+                    st.session_state.lp_answered = False
+                    st.session_state.lp_selected = None
+
+                lp_q = st.session_state.lp_question
+                if lp_q:
+                    st.markdown(f"**题目：** {lp_q.get('question', '')}")
+                    options = lp_q.get('options', [])
+                    lp_selected = st.radio(
+                        "选择答案",
+                        options,
+                        index=None if not st.session_state.lp_selected else (
+                            options.index(st.session_state.lp_selected) if st.session_state.lp_selected in options else None
+                        ),
+                        key=f"lp_radio_{lp_q.get('id', '')}",
+                        label_visibility="collapsed"
+                    )
+                    if lp_selected:
+                        st.session_state.lp_selected = lp_selected
+
+                    if not st.session_state.lp_answered:
+                        if st.button("提交答案", key="lp_submit") and st.session_state.lp_selected:
+                            correct_answer = lp_q.get('answer', '')
+                            is_correct = st.session_state.lp_selected.startswith(correct_answer)
+
+                            student_data = record_answer(student_data, current_node, lp_q.get('id'), is_correct)
+                            student_data = update_student_state(student_data, current_node, is_correct)
+
+                            # 检查是否掌握，自动前进
+                            p_after = student_data['node_states'].get(current_node, {}).get('p_mastery', 0)
+                            if p_after >= MASTERY_THRESHOLD:
+                                student_data = advance_path(student_data, graph_data)
+
+                            save_student(student_data)
+                            st.session_state.lp_answered = True
+
+                            if is_correct:
+                                st.success(f"回答正确！正确答案：{correct_answer}")
+                            else:
+                                st.error(f"回答错误。正确答案：{correct_answer}")
+                            st.markdown(f"**解析：** {lp_q.get('explanation', '无解析')}")
+
+                            if p_after >= MASTERY_THRESHOLD:
+                                st.success(f"{current_name} 已掌握！")
+                    else:
+                        if st.button("下一题", key="lp_next"):
+                            st.session_state.lp_question = None
+                            st.session_state.lp_answered = False
+                            st.session_state.lp_selected = None
+                            st.rerun()
+                else:
+                    p_current = node_states.get(current_node, {}).get('p_mastery', 0)
+                    st.warning(f"{current_name} 的题目已全部做完，但尚未达到掌握阈值（当前 {p_current*100:.0f}%，需要 95%）。")
+                    col_retry, col_skip = st.columns(2)
+                    with col_retry:
+                        if st.button("重新练习本知识点", key="lp_retry"):
+                            # 清除该节点的答题记录，让题目重新可用
+                            student_data['answer_history'] = [
+                                h for h in student_data.get('answer_history', [])
+                                if h.get('node_id') != current_node
+                            ]
+                            save_student(student_data)
+                            st.session_state.lp_question = None
+                            st.session_state.lp_answered = False
+                            st.session_state.lp_selected = None
+                            st.rerun()
+                    with col_skip:
+                        if st.button("跳到下一个知识点", key="lp_skip"):
+                            lp_data = student_data.get('learning_path', {})
+                            lp_data['current_index'] = lp_data.get('current_index', 0) + 1
+                            student_data = advance_path(student_data, graph_data)
+                            save_student(student_data)
+                            st.session_state.lp_question = None
+                            st.session_state.lp_answered = False
+                            st.session_state.lp_selected = None
+                            st.rerun()
+            else:
+                st.success("恭喜！学习路径已全部完成！")
+        elif not lp:
+            st.info("请选择学习模式并生成学习路径。")
+
+with tab3:
     st.subheader("知识图谱")
     
     if not student_id:

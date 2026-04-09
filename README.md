@@ -23,22 +23,30 @@ project/
 │   ├── questions_course_linear_algebra.json # 线性代数题库
 │   ├── graph_course_china_finance.json # 中国金融学知识图谱（从Excel导入）
 │   ├── questions_course_china_finance.json # 中国金融学题库（66道）
-│   ├── graph_course_philosophy.json    # 哲学通论知识图谱（从Excel导入，41个知识点）
+│   ├── graph_course_philosophy.json    # 哲学通论知识图谱（从Excel导入，41个知识点，含modules）
 │   ├── questions_course_philosophy.json # 哲学通论题库（123道，LLM生成）
 │   ├── 中国金融学.xlsx                  # 原始知识图谱Excel数据
 │   ├── 哲学通论.xlsx                    # 原始知识图谱Excel数据
 │   └── students/                       # 学生状态文件
 ├── core/
-│   ├── bkt.py                          # BKT 更新逻辑
-│   ├── cat.py                          # CAT 选题逻辑
+│   ├── bkt.py                          # BKT 标准四参数模型更新逻辑
+│   ├── cat.py                          # CAT 自适应选题逻辑（掌握阈值驱动）
 │   ├── initializer.py                  # 初始概率计算
-│   └── llm_client.py                   # LLM API 调用封装
+│   ├── llm_client.py                   # LLM API 调用封装
+│   ├── survey.py                       # 入学问卷逻辑（模块自评 + 锚点测试）
+│   └── learning_path.py                # 学习路径生成（拓扑排序 + 全图谱/指定目标）
 ├── utils/
 │   └── io.py                           # JSON 读写工具
 ├── tests/
 │   ├── test_bkt.py
 │   ├── test_cat.py
-│   └── test_initializer.py
+│   ├── test_initializer.py
+│   ├── test_survey.py                  # 问卷模块测试
+│   └── test_learning_path.py           # 学习路径模块测试
+├── docs/
+│   ├── 算法说明_BKT与CAT.md            # BKT和CAT算法文档
+│   ├── 算法说明_问卷与学习路径.md        # 问卷和学习路径算法文档
+│   └── 新增学科操作指南.md              # 新增学科操作指南
 ├── app.py                              # Streamlit 主入口
 ├── requirements.txt                    # 依赖文件
 ├── .gitignore                         # Git 忽略文件
@@ -49,12 +57,15 @@ project/
 
 1. **多课程支持**：支持金融学基础、线性代数、中国金融学和哲学通论四门课程，可在侧边栏自由切换
 2. **独立的课程状态**：每个学生可以拥有多个课程的状态，切换课程时不会覆盖之前的状态
-3. **知识图谱可视化**：使用 pyvis 实现交互式知识图谱，展示知识点之间的先修关系和学生的掌握情况
-4. **自适应诊断**：基于学生当前知识状态，自动选择信息增益最大的题目
-5. **贝叶斯知识追踪**：根据学生答题情况动态更新知识点掌握概率
-6. **冷启动初始化**：基于知识图谱的先修关系和知识点难度，计算初始掌握概率
-7. **实时反馈**：答题后立即显示答案解析和掌握概率变化
-8. **LaTeX 数学公式渲染**：支持矩阵、行列式等数学公式的正确显示
+3. **入学问卷**：按模块粗粒度评估学生背景（4级自评），结合锚点测试验证高自评模块，精准调整初始掌握概率
+4. **学习路径推荐**：基于知识图谱拓扑排序生成个性化学习路径，支持全图谱通关和指定目标模块两种模式
+5. **学习路径可视化**：在知识图谱上以不同颜色和标记展示学习路径，当前节点红色高亮，已掌握绿色打勾，待学习橙色编号
+6. **知识图谱可视化**：使用 pyvis 实现交互式知识图谱，展示知识点之间的先修关系和学生的掌握情况
+7. **自适应诊断**：基于学生当前知识状态，自动选择信息增益最大的题目
+8. **贝叶斯知识追踪**：标准四参数 BKT 模型，根据答题情况动态更新知识点掌握概率
+9. **冷启动初始化**：基于知识图谱的先修关系和知识点难度，计算初始掌握概率
+10. **实时反馈**：答题后立即显示答案解析和掌握概率变化
+11. **LaTeX 数学公式渲染**：支持矩阵、行列式等数学公式的正确显示
 
 ## 如何运行
 
@@ -122,15 +133,15 @@ python validate_json.py
 }
 ```
 
-### 学生状态（student_{id}.json）
+### 学生状态（{student_id}.json）
 
 ```json
 {
   "student_id": "stu_001",
   "courses": {
-    "course_finance_101": {
+    "course_philosophy": {
       "node_states": {
-        "node_001": {
+        "node_phil_001": {
           "p_mastery": 0.62,
           "base_prob": 0.50,
           "difficulty_coeff": 0.80,
@@ -138,19 +149,18 @@ python validate_json.py
           "last_updated": "2025-01-01T00:00:00"
         }
       },
-      "answer_history": []
-    },
-    "course_linear_algebra": {
-      "node_states": {
-        "node_la_001": {
-          "p_mastery": 0.5,
-          "base_prob": 0.5,
-          "difficulty_coeff": 0.7,
-          "answered_count": 0,
-          "last_updated": "2025-01-01T00:00:00"
-        }
+      "answer_history": [],
+      "survey_results": {
+        "completed": true,
+        "responses": {"mod_phil_01": 3, "mod_phil_02": 1},
+        "anchor_tests": {"mod_phil_01": {"is_correct": true}}
       },
-      "answer_history": []
+      "learning_path": {
+        "mode": "full",
+        "target_modules": [],
+        "path_nodes": ["node_phil_001", "node_phil_004"],
+        "current_index": 1
+      }
     }
   }
 }
@@ -208,10 +218,16 @@ python validate_json.py
 ### 侧边栏
 - 学生ID输入：用于标识学生身份
 - 课程选择：可在"金融学基础"、"线性代数"、"中国金融学"和"哲学通论"之间切换
+- 重新做问卷：重置问卷和学习状态（仅在有 modules 的课程中显示）
 - 知识点掌握情况：显示每个知识点的掌握概率和进度条
 
+### 入学问卷（首次进入有 modules 的课程时自动触发）
+- **自评阶段**：按模块显示4级熟悉度选项（没接触过/听说过/学过且有基础/掌握较好）
+- **锚点测试**：对自评"学过"及以上的模块，出一道代表性题目验证，答错则下调该模块概率
+
 ### 主区域
-- **自适应诊断**：显示当前题目，学生可以选择答案并提交，支持 LaTeX 数学公式渲染
+- **自适应诊断**：CAT 选题，选择信息增益最大的知识点出题，支持 LaTeX 数学公式渲染
+- **学习路径**：选择全图谱通关或指定目标模块，生成个性化学习路径，以知识图谱可视化方式展示路径进度，在路径中逐节点答题学习
 - **知识图谱**：可视化展示知识点之间的关系和学生的掌握情况
 
 ## 注意事项
@@ -230,12 +246,16 @@ python validate_json.py
 4. ✅ 侧边栏显示/隐藏控制
 5. ✅ 课程切换时内容自动更新
 6. ✅ 从Excel知识图谱导入并生成图谱JSON（中国金融学，22个知识点，含前驱关系）
-7. ✅ 从Excel知识图谱导入并生成图谱JSON（哲学通论，41个知识点，含前驱关系）
+7. ✅ 从Excel知识图谱导入并生成图谱JSON（哲学通论，41个知识点，含前驱关系和模块分组）
 8. ✅ 基于知识图谱节点生成多层级试题（memory/understanding/application，中国金融学66道，哲学通论123道）
 9. ✅ 试题数据 LaTeX 公式规范化（修复转义问题，统一使用 $...$ 包裹数学表达式）
 10. ✅ 通用化LLM试题生成脚本（支持命令行指定课程ID）
 11. ✅ BKT 升级为标准四参数模型（加入学习转移概率 P(T)，掌握概率可自然趋近100%）
 12. ✅ CAT 选题改为掌握阈值驱动（概率 >= 0.95 视为已掌握，替代固定答题次数上限）
+13. ✅ 入学问卷系统（按模块粗粒度自评 + 锚点测试验证，精准调整初始概率）
+14. ✅ 学习路径推荐（全图谱通关/指定目标模块两种模式，基于拓扑排序生成个性化路径）
+15. ✅ 学习路径可视化（基于 pyvis 知识图谱展示路径，颜色区分当前/待学习/已掌握/非路径节点）
+16. ✅ 学习路径答题流程（逐节点出题，掌握后自动前进，题目用完可重新练习或跳过）
 
 ## 未来计划
 

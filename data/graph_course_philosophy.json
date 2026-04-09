@@ -1,4 +1,66 @@
 {
+  "modules": [
+    {
+      "id": "mod_phil_01",
+      "name": "哲学的本质与爱智",
+      "node_ids": ["node_phil_001", "node_phil_002", "node_phil_003"],
+      "representative_node_id": "node_phil_001"
+    },
+    {
+      "id": "mod_phil_02",
+      "name": "哲学观与哲学形态",
+      "node_ids": ["node_phil_004", "node_phil_005", "node_phil_006", "node_phil_007"],
+      "representative_node_id": "node_phil_005"
+    },
+    {
+      "id": "mod_phil_03",
+      "name": "哲学与常识",
+      "node_ids": ["node_phil_008", "node_phil_009", "node_phil_010", "node_phil_011", "node_phil_012"],
+      "representative_node_id": "node_phil_011"
+    },
+    {
+      "id": "mod_phil_04",
+      "name": "哲学与科学",
+      "node_ids": ["node_phil_013", "node_phil_014", "node_phil_015", "node_phil_016", "node_phil_017", "node_phil_018"],
+      "representative_node_id": "node_phil_014"
+    },
+    {
+      "id": "mod_phil_05",
+      "name": "哲学的思维方式",
+      "node_ids": ["node_phil_019", "node_phil_020", "node_phil_021"],
+      "representative_node_id": "node_phil_019"
+    },
+    {
+      "id": "mod_phil_06",
+      "name": "哲学的生活基础",
+      "node_ids": ["node_phil_022", "node_phil_023", "node_phil_024"],
+      "representative_node_id": "node_phil_022"
+    },
+    {
+      "id": "mod_phil_07",
+      "name": "哲学的主要问题",
+      "node_ids": ["node_phil_025", "node_phil_026", "node_phil_027", "node_phil_028", "node_phil_029"],
+      "representative_node_id": "node_phil_025"
+    },
+    {
+      "id": "mod_phil_08",
+      "name": "哲学的派别冲突",
+      "node_ids": ["node_phil_030", "node_phil_031", "node_phil_032", "node_phil_033", "node_phil_034"],
+      "representative_node_id": "node_phil_030"
+    },
+    {
+      "id": "mod_phil_09",
+      "name": "哲学的历史演进",
+      "node_ids": ["node_phil_035", "node_phil_036", "node_phil_037", "node_phil_038"],
+      "representative_node_id": "node_phil_036"
+    },
+    {
+      "id": "mod_phil_10",
+      "name": "哲学的修养与创造",
+      "node_ids": ["node_phil_039", "node_phil_040", "node_phil_041"],
+      "representative_node_id": "node_phil_039"
+    }
+  ],
   "nodes": [
     {
       "id": "node_phil_001",
