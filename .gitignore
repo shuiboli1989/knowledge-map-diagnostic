@@ -40,3 +40,4 @@ data/review_questions_*.html
 
 # One-off scripts
 shuffle_options.py
+test_api.py
