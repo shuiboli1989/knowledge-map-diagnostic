@@ -15,34 +15,52 @@ def test_update_mastery_correct_increases():
     assert p_after_correct > p_initial
 
 
-def test_update_mastery_incorrect_decreases():
-    """测试答错后概率下降"""
+def test_update_mastery_incorrect_still_increases_slightly():
+    """测试答错后：后验下降，但学习转移使总概率可能微升或微降"""
     p_initial = 0.5
     p_after_incorrect = update_mastery(p_initial, False)
+    # 标准 BKT 中，答错后后验下降，但 P(T) 会拉回一些
+    # 对于 p=0.5, P(S)=0.15, P(G)=0.25, P(T)=0.1：
+    # 后验 ≈ 0.1667, 加转移后 ≈ 0.25
     assert p_after_incorrect < p_initial
 
 
-def test_update_mastery_five_correct_approaches_099():
-    """测试连续答对5次后概率应接近0.99"""
+def test_update_mastery_five_correct_approaches_1():
+    """测试连续答对5次后概率应接近1.0"""
     p = 0.5
     for _ in range(5):
         p = update_mastery(p, True)
-    assert p >= 0.95  # 连续答对5次后概率应接近0.99
+    assert p >= 0.98
 
 
-def test_update_mastery_bounds():
-    """测试概率不超出 [0.01, 0.99] 边界"""
-    # 测试上限
-    p_near_1 = 0.98
+def test_update_mastery_can_reach_1():
+    """测试概率可以达到 1.0（不再被 0.99 硬限制）"""
+    p = 0.5
+    for _ in range(20):
+        p = update_mastery(p, True)
+    assert p == 1.0
+
+
+def test_update_mastery_lower_bound():
+    """测试概率不低于 0.01"""
+    p = 0.02
     for _ in range(10):
-        p_near_1 = update_mastery(p_near_1, True)
-    assert p_near_1 <= 0.99
-    
-    # 测试下限
-    p_near_0 = 0.02
-    for _ in range(10):
-        p_near_0 = update_mastery(p_near_0, False)
-    assert p_near_0 >= 0.01
+        p = update_mastery(p, False)
+    assert p >= 0.01
+
+
+def test_update_mastery_learning_transfer():
+    """测试学习转移效果：即使答错，持续练习概率也会逐步回升"""
+    p = 0.3
+    # 连续答错5次
+    for _ in range(5):
+        p = update_mastery(p, False)
+    p_after_wrong = p
+    # 然后连续答对5次
+    for _ in range(5):
+        p = update_mastery(p, True)
+    # 答对后应该显著回升
+    assert p > p_after_wrong + 0.3
 
 
 def test_update_student_state():

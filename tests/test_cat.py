@@ -62,9 +62,8 @@ def test_select_next_node_basic():
     assert selected_node == "node_001"
 
 
-def test_select_next_node_filter_answered():
-    """测试过滤已答题数 >= 3 的节点"""
-    # 构建测试数据
+def test_select_next_node_filter_mastered():
+    """测试过滤已掌握（概率 >= 0.95）的节点"""
     graph_data = {
         "nodes": [
             {
@@ -79,29 +78,28 @@ def test_select_next_node_filter_answered():
             }
         ]
     }
-    
+
     student_data = {
         "student_id": "stu_001",
         "course_id": "course_finance_101",
         "node_states": {
             "node_001": {
-                "p_mastery": 0.5,  # 最接近 0.5，但已答题数 >= 3
+                "p_mastery": 0.96,  # 已掌握，应被跳过
                 "answered_count": 3
             },
             "node_002": {
-                "p_mastery": 0.6,  # 离 0.5 较远，但未达 3 次
+                "p_mastery": 0.6,  # 未掌握
                 "answered_count": 0
             }
         },
         "answer_history": []
     }
-    
+
     questions = [
         {"id": "q_001", "node_id": "node_001"},
         {"id": "q_002", "node_id": "node_002"}
     ]
-    
-    # 测试选择结果
+
     selected_node = select_next_node(graph_data, student_data, questions)
     assert selected_node == "node_002"
 
@@ -171,8 +169,7 @@ def test_select_next_node_successor_priority():
 
 
 def test_select_next_node_no_available():
-    """测试无可选节点的情况"""
-    # 构建测试数据
+    """测试无可选节点的情况（所有节点已掌握）"""
     graph_data = {
         "nodes": [
             {
@@ -182,24 +179,23 @@ def test_select_next_node_no_available():
             }
         ]
     }
-    
+
     student_data = {
         "student_id": "stu_001",
         "course_id": "course_finance_101",
         "node_states": {
             "node_001": {
-                "p_mastery": 0.5,
-                "answered_count": 3  # 已答题数 >= 3
+                "p_mastery": 0.96,  # 已掌握
+                "answered_count": 3
             }
         },
         "answer_history": []
     }
-    
+
     questions = [
         {"id": "q_001", "node_id": "node_001"}
     ]
-    
-    # 测试选择结果
+
     selected_node = select_next_node(graph_data, student_data, questions)
     assert selected_node is None
 

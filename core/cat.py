@@ -9,6 +9,9 @@ import random
 from typing import Dict, List, Optional
 
 
+MASTERY_THRESHOLD = 0.95  # 掌握概率达到此阈值后，认为已掌握，不再出题
+
+
 def calculate_info_gain(p_mastery: float) -> float:
     """计算信息增益
 
@@ -40,8 +43,8 @@ def count_untested_successors(graph_data: dict, node_id: str, student_data: dict
         if node_id in prerequisites:
             successor_id = node.get('id')
             if successor_id in student_data.get('node_states', {}):
-                answered_count = student_data['node_states'][successor_id].get('answered_count', 0)
-                if answered_count < 3:
+                p_mastery = student_data['node_states'][successor_id].get('p_mastery', 0.5)
+                if p_mastery < MASTERY_THRESHOLD:
                     count += 1
     return count
 
@@ -61,19 +64,28 @@ def select_next_node(
     Returns:
         str | None: 选中的节点ID，无可选节点时返回 None
     """
-    # 1. 过滤掉已答题数 >= 3 的节点
+    # 1. 过滤掉已掌握（概率 >= 阈值）或已无可用题目的节点
     eligible_nodes = []
     node_states = student_data.get('node_states', {})
-    
+
+    # 预计算每个节点的已答题目ID
+    answered_question_ids = {h.get('question_id') for h in student_data.get('answer_history', [])}
+
     for node in graph_data.get('nodes', []):
         node_id = node.get('id')
         if node_id in node_states:
-            answered_count = node_states[node_id].get('answered_count', 0)
-            if answered_count < 3:
-                p_mastery = node_states[node_id].get('p_mastery', 0.5)
-                info_gain = calculate_info_gain(p_mastery)
-                untested_successors = count_untested_successors(graph_data, node_id, student_data)
-                eligible_nodes.append((info_gain, -untested_successors, node_id))  # 负号用于排序
+            p_mastery = node_states[node_id].get('p_mastery', 0.5)
+            # 跳过已掌握的节点
+            if p_mastery >= MASTERY_THRESHOLD:
+                continue
+            # 跳过没有剩余题目的节点
+            node_questions = [q for q in questions if q.get('node_id') == node_id]
+            available_questions = [q for q in node_questions if q.get('id') not in answered_question_ids]
+            if not available_questions:
+                continue
+            info_gain = calculate_info_gain(p_mastery)
+            untested_successors = count_untested_successors(graph_data, node_id, student_data)
+            eligible_nodes.append((info_gain, -untested_successors, node_id))
 
     if not eligible_nodes:
         return None
